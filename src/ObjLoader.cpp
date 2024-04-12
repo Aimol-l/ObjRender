@@ -16,7 +16,7 @@ void ObjLoader::load_obj(const std::string &path){
         return;
     }
     std::string line;
-    while (std::getline(inputFile, line)) {
+    while(std::getline(inputFile, line)) {
         if(line.substr(0,2) == "v "){
             std::istringstream substr(line.substr(2));
             glm::vec3 v;
@@ -37,6 +37,8 @@ void ObjLoader::load_obj(const std::string &path){
         }
         if(line.substr(0,2) == "f "){
             auto results = str::split(line.substr(2));
+            results.erase(std::remove(results.begin(), results.end(), ""), results.end());
+            results.erase(std::remove(results.begin(), results.end(), "\r"), results.end());
             if(results.size() == 3){
                 Face f;
                 for(int i = 0;i<results.size();i++){
@@ -50,7 +52,7 @@ void ObjLoader::load_obj(const std::string &path){
                 Face f1,f2;
                 const static int arr1[] = {0,1,2};
                 for(int i = 0;i < results.size()-1;i++){
-                    auto res = str::split(results[arr1[i]],'/');
+                    auto res = str::split(results[i],'/');
                     if(res[0] != "" && res.size() >=1) f1.v.at(i) =  std::stoul(res[0])-1;
                     if(res[1] != "" && res.size() >=2) f1.vt.at(i) =  std::stoul(res[1])-1;
                     if(res[2] != "" && res.size() >=3) f1.vn.at(i) =  std::stoul(res[2])-1;

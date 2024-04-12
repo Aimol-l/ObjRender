@@ -11,7 +11,7 @@ void check_error(std::string info){
 
 void Render::add_obj(const std::string &obj_path, const std::string &texture_path){
     m_obj->load_obj(obj_path);
-    // m_texture->log_texture(texture_path);
+    m_texture->log_texture(texture_path);
     Log::info("obj model file path: "+obj_path);
     Log::info("texture file path: "+texture_path);
     //*******************************************************************
@@ -20,7 +20,6 @@ void Render::add_obj(const std::string &obj_path, const std::string &texture_pat
     auto normals = m_obj->get_ver_normals();
     auto faces = m_obj->get_faces();
     std::vector<uint> EBO;
-    std::cout<<"*********EBO***********"<<std::endl;
     for(auto const &f: faces) {
         EBO.push_back(f.v.at(0));
         EBO.push_back(f.v.at(1));
