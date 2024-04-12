@@ -68,12 +68,12 @@ void Render::add_obj(const std::string &obj_path, const std::string &texture_pat
     check_error("done!!");
 }
 void Render::bind(){
-    // m_texture->bind();
+    m_texture->bind();
     glBindVertexArray(m_vao);
 }
 void Render::unbind(){
     glBindVertexArray(0);
-    // m_texture->unbind();
+    m_texture->unbind();
 }
 Render::Render(){
     m_camera = Camera::get_instence();
