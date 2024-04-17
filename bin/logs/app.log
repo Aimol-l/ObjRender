@@ -1,0 +1,17 @@
+[2024-04-18 04:48:15.465] [opengl_logger] [info] OpenGL version: 4.6.0 NVIDIA 550.67
+[2024-04-18 04:48:15.465] [opengl_logger] [info] add_shader....
+[2024-04-18 04:48:15.465] [opengl_logger] [info] vertex_path = ../assets/shader/shader.vs
+[2024-04-18 04:48:15.465] [opengl_logger] [info] fragment_path = ../assets/shader/shader.fs
+[2024-04-18 04:48:15.466] [opengl_logger] [info] add_shader....done!!
+[2024-04-18 04:48:15.466] [opengl_logger] [info] load_obj.....
+[2024-04-18 04:48:15.466] [opengl_logger] [info] vertex number = 4
+[2024-04-18 04:48:15.466] [opengl_logger] [info] vertexTexture coor number = 4
+[2024-04-18 04:48:15.466] [opengl_logger] [info] vertexNormal number = 1
+[2024-04-18 04:48:15.466] [opengl_logger] [info] trangle number  = 2
+[2024-04-18 04:48:15.466] [opengl_logger] [info] load_obj.....done!!
+[2024-04-18 04:48:15.483] [opengl_logger] [info] obj model file path: ../assets/obj/flat.obj
+[2024-04-18 04:48:15.483] [opengl_logger] [info] texture file path: ../assets/img/flat.png
+[2024-04-18 04:48:15.483] [opengl_logger] [info] add_camera....
+[2024-04-18 04:48:15.483] [opengl_logger] [info] add_camera....done!!
+[2024-04-18 04:48:15.483] [opengl_logger] [info] set_window done!!
+[2024-04-18 04:48:15.483] [opengl_logger] [info] set_render done!!

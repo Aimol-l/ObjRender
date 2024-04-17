@@ -64,7 +64,7 @@ void Render::add_obj(const std::string &obj_path, const std::string &texture_pat
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     // 使用 shader
-    m_shader->use();
+    // m_shader->use();
     check_error("done!!");
 }
 void Render::bind(){

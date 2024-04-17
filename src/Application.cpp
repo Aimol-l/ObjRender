@@ -15,7 +15,7 @@ void Application::run(){
     glEnable(GL_DEPTH_TEST);
     while (!this->m_window->close()){
         m_render->bind(); // vao
-        glClearColor(0,0,0,0); //窗口背景颜色
+         glClearColor(0.2f, 0.3f, 0.3f, 1.0f); 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
         //************************Lines******************************
         // glLineWidth(1); 
@@ -61,6 +61,5 @@ void Application::set_window(Window *win){
 
 void Application::set_render(Render *rend){
     m_render = std::unique_ptr<Render>(rend);
-    std::cout<<rend<<std::endl;
     Log::info("set_render done!!");
 }

@@ -19,9 +19,9 @@ int main(int argc, char const *argv[]){
     auto up    = glm::vec3(0.0f, 1.0f, 0.0f);      //正上方向
     const std::string vertex_path = "../assets/shader/shader.vs";
     const std::string fragment_path ="../assets/shader/shader.fs";
-    const std::string texture_path = "../assets/moon/Textures/Diffuse_2K.png";
+    const std::string texture_path = "../assets/img/flat.png";
     rend->add_shader(vertex_path,fragment_path);
-    rend->add_obj("../assets/obj/moon.obj",texture_path);
+    rend->add_obj("../assets/obj/flat.obj",texture_path);
     rend->add_camera(pos,forward,up);
     //*******************************************************************************
     auto &app = Application::getApp();

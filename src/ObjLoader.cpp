@@ -22,12 +22,14 @@ void ObjLoader::load_obj(const std::string &path){
             glm::vec3 v;
             substr >>v.x>>v.y>>v.z;
             m_v_s.push_back(v);
+            std::cout<<std::format("v=[{},{},{}]",v.x,v.y,v.z)<<std::endl;
         }
         if(line.substr(0,2) == "vt"){
             std::istringstream substr(line.substr(2));
             glm::vec2 vt;
             substr>>vt.x>>vt.y;
             m_vt_s.push_back(vt);
+            std::cout<<std::format("vt=[{},{}]",vt.x,vt.y)<<std::endl;
         }
         if(line.substr(0,2) == "vn"){
             std::istringstream substr(line.substr(2));
