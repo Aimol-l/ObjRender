@@ -16,14 +16,37 @@ void Render::add_obj(const std::string &obj_path, const std::string &texture_pat
     Log::info("texture file path: "+texture_path);
     //*******************************************************************
     auto vertices = m_obj->get_vertexes();
+    for(const auto&v:vertices){
+        std::cout<<std::format("[{},{},{}]",v.x,v.y,v.z)<<std::endl;
+    }
+    std::cout<<std::format("*************")<<std::endl;
     auto textures = m_obj->get_ver_texture();
+    for(const auto&t:textures){
+        std::cout<<std::format("[{},{}]",t.x,t.y)<<std::endl;
+    }
+    std::cout<<std::format("*************")<<std::endl;
     auto normals = m_obj->get_ver_normals();
+    for(const auto&n:normals){
+        std::cout<<std::format("[{},{},{}]",n.x,n.y,n.z)<<std::endl;
+    }
+    std::cout<<std::format("*************")<<std::endl;
     auto faces = m_obj->get_faces();
     std::vector<uint> EBO;
+    // EBO.resize(faces.size()*8);
     for(auto const &f: faces) {
-        EBO.push_back(f.v.at(0));
-        EBO.push_back(f.v.at(1));
-        EBO.push_back(f.v.at(2));
+        for(int i =0;i<3;++i) EBO.push_back(f.v.at(i));
+        // for(int i =0;i<2;++i) EBO.push_back(f.vt.at(i));
+        // for(int i =0;i<3;++i) EBO.push_back(f.vn.at(i));
+    }
+    for(auto const &f: faces) {
+        // for(int i =0;i<3;++i) EBO.push_back(f.v.at(i));
+        for(int i =0;i<2;++i) EBO.push_back(f.vt.at(i));
+        // for(int i =0;i<3;++i) EBO.push_back(f.vn.at(i));
+    }
+    for(auto const &f: faces) {
+        // for(int i =0;i<3;++i) EBO.push_back(f.v.at(i));
+        // for(int i =0;i<2;++i) EBO.push_back(f.vt.at(i));
+        for(int i =0;i<3;++i) EBO.push_back(f.vn.at(i));
     }
     //******************************VAO*************************************
     glGenVertexArrays(1, &m_vao);
@@ -33,38 +56,51 @@ void Render::add_obj(const std::string &obj_path, const std::string &texture_pat
     glGenBuffers(1, &temp_vbo1);
     m_VBOs.push_back(temp_vbo1);
     glBindBuffer(GL_ARRAY_BUFFER, temp_vbo1);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size() , &vertices[0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,sizeof(glm::vec3), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    check_error("temp_vbo1");
     //******************************顶点纹理坐标VBO**************************
     GLuint temp_vbo2;
     glGenBuffers(1, &temp_vbo2);
     m_VBOs.push_back(temp_vbo2);
     glBindBuffer(GL_ARRAY_BUFFER, temp_vbo2);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * textures.size(), textures.data(), GL_STATIC_DRAW);
-    glEnableVertexAttribArray(1); // This allows usage of layout location 1 in the VertexTexture shader
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * textures.size(), &textures[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     check_error("temp_vbo2");
     //******************************顶点法线向量VBO*************************************
     GLuint temp_vbo3;
     glGenBuffers(1, &temp_vbo3);
     m_VBOs.push_back(temp_vbo3);
     glBindBuffer(GL_ARRAY_BUFFER, temp_vbo3);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * normals.size(), normals.data(), GL_STATIC_DRAW);
-    glEnableVertexAttribArray(2); // This allows usage of layout location 2 in the VertexTexture shader
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * normals.size(), &normals[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     check_error("temp_vbo3");
     //*****************************EBO**************************************
     glGenBuffers(1, &m_ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * EBO.size(), EBO.data(), GL_STATIC_DRAW);
-    check_error("m_ebo");
+
+    // GLuint temp_ebo2;
+    // glGenBuffers(1, &temp_ebo2);
+    // m_EBOs.push_back(temp_ebo2);
+    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, temp_ebo2);
+	// glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * EBO2.size(), EBO2.data(), GL_STATIC_DRAW);
+
+    // GLuint temp_ebo3;
+    // glGenBuffers(1, &temp_ebo3);
+    // m_EBOs.push_back(temp_ebo3);
+    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, temp_ebo3);
+	// glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * EBO3.size(), EBO3.data(), GL_STATIC_DRAW);
     //*******************************************************************
-    // 解绑VAO,VBO
+    // 解绑VAO,EBO
     glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    // 使用 shader
-    // m_shader->use();
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     check_error("done!!");
 }
 void Render::bind(){
@@ -84,7 +120,7 @@ Render::Render(){
 Render::~Render(){
     delete m_camera,m_obj,m_shader;
     glDeleteVertexArrays(1, &m_vao);
-	glDeleteBuffers(1, &m_ebo);
+    glDeleteVertexArrays(1, &m_ebo);
     for(size_t i =0 ; i<m_VBOs.size();i++)  glDeleteBuffers(1, &m_VBOs[i]);
 }
 void Render::add_shader(const std::string &vertex_path, const std::string &fragment_path){

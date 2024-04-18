@@ -22,14 +22,12 @@ void ObjLoader::load_obj(const std::string &path){
             glm::vec3 v;
             substr >>v.x>>v.y>>v.z;
             m_v_s.push_back(v);
-            std::cout<<std::format("v=[{},{},{}]",v.x,v.y,v.z)<<std::endl;
         }
         if(line.substr(0,2) == "vt"){
             std::istringstream substr(line.substr(2));
             glm::vec2 vt;
             substr>>vt.x>>vt.y;
             m_vt_s.push_back(vt);
-            std::cout<<std::format("vt=[{},{}]",vt.x,vt.y)<<std::endl;
         }
         if(line.substr(0,2) == "vn"){
             std::istringstream substr(line.substr(2));
@@ -59,7 +57,7 @@ void ObjLoader::load_obj(const std::string &path){
                     if(res[1] != "" && res.size() >=2) f1.vt.at(i) =  std::stoul(res[1])-1;
                     if(res[2] != "" && res.size() >=3) f1.vn.at(i) =  std::stoul(res[2])-1;
                 }
-                const static int arr2[] = {0,2,3};
+                const static int arr2[] = {1,2,3};
                 for(int i = 0;i < results.size()-1;i++){
                     auto res = str::split(results[arr2[i]],'/');
                     if(res[0] != "" && res.size() >=1) f2.v.at(i) =  std::stoul(res[0])-1;
@@ -81,10 +79,9 @@ std::vector<Face> ObjLoader::get_faces(){
 std::vector<glm::vec3> ObjLoader::get_vertexes(){
     return m_v_s;
 }
-
 std::vector<glm::vec3> ObjLoader::get_ver_normals(){
     return m_vn_s;
 }
 std::vector<glm::vec2> ObjLoader::get_ver_texture(){
-    return std::move(m_vt_s);
+    return m_vt_s;
 }
