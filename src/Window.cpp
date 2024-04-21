@@ -4,7 +4,7 @@
 Window::Window(){
    
 }
-void Window::terminate() const{
+Window::~Window(){
     if(m_window) glfwTerminate();
 }
 int Window::close(){
@@ -15,7 +15,7 @@ void Window::update() const{
     if(m_window) glfwSwapBuffers(m_window);
     glfwPollEvents();
 }
-bool Window::create_window(unsigned int w, unsigned int h, const char *title, bool is_full){
+bool Window::create_window(uint w, uint h, const char *title, bool is_full){
     // 初始化GLFW
     if (!glfwInit()) {
         const char *errmsg = nullptr;

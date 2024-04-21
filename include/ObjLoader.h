@@ -8,6 +8,7 @@
 #include <format>
 #include "glm/glm.hpp"
 
+//里面存放的就是index了
 struct Face{
     std::array<uint,3> v;
     std::array<uint,3> vt;
