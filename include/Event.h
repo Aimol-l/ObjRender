@@ -12,3 +12,4 @@ static Camera* CAMERA = Camera::get_instence();
 void mouse_moveBack(GLFWwindow* window, double xpos, double ypos);
 void mouse_clickBack(GLFWwindow* window, int button, int action, int mods);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);

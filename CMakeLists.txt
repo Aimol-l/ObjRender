@@ -35,7 +35,7 @@ target_link_libraries(${THIS_PROJECT_NAME} PUBLIC glad)
 target_link_libraries(${THIS_PROJECT_NAME} PUBLIC glfw)
 target_link_libraries(${THIS_PROJECT_NAME} PUBLIC spdlog)
 target_link_libraries(${THIS_PROJECT_NAME} PUBLIC glm)
-
+target_link_libraries(${THIS_PROJECT_NAME} PUBLIC assimp)
 
 target_include_directories(glad INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/3rdpart/glad/include)
 target_include_directories(glfw INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/3rdpart/glfw/include)
