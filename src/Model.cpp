@@ -7,20 +7,23 @@ void Model::draw_model(Shader &shader){
 
 void Model::load_model(std::string &path){
     Assimp::Importer import;
-    const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);    
+    // const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);    
+    const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
         return;
     }
     m_directory = path.substr(0, path.find_last_of('/'));
+    std::cout<<m_directory<<std::endl;
     process_node(scene->mRootNode, scene);
 }
 
 uint Model::load_images(const std::string &name, const std::string &dir_path, bool gamma){
-	auto file_path = dir_path + '/' + name;
+	auto file_path = name;
 	uint textureID;
 	glGenTextures(1, &textureID);
 	int width, height, Channels;
+    stbi_set_flip_vertically_on_load(false);
 	u_char *data = stbi_load(file_path.c_str(), &width, &height, &Channels, 0);
 	if (data){
 		GLenum format;
@@ -47,8 +50,6 @@ uint Model::load_images(const std::string &name, const std::string &dir_path, bo
 void Model::process_node(aiNode *node, const aiScene *scene){
     // 处理位于当前节点的每个网格
     for (unsigned int i = 0; i < node->mNumMeshes; i++){
-        // 节点对象仅包含索引用来索引场景中的实际对象。
-        // 场景包含所有数据，节点只是为了有组织的保存东西（如节点之间的关系）。
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
         m_meshes.push_back(process_mesh(mesh, scene));
     }
@@ -58,10 +59,7 @@ void Model::process_node(aiNode *node, const aiScene *scene){
 }
 
 Mesh Model::process_mesh(aiMesh *mesh, const aiScene *scene){
-    // 要填写的数据
     std::vector<Vertex> vertices;
-    std::vector<uint> indices;
-    std::vector<Texture> textures;
     // 遍历每个网格的顶点
     for (uint i = 0; i < mesh->mNumVertices; i++){
         Vertex vertex;
@@ -77,6 +75,7 @@ Mesh Model::process_mesh(aiMesh *mesh, const aiScene *scene){
         vertex.Bitangent = {mesh->mBitangents[i].x,mesh->mBitangents[i].y,mesh->mBitangents[i].z};// v向量
         vertices.push_back(vertex);
     }
+    std::vector<uint> indices;
     //现在遍历每个网格面（一个面是一个三角形的网格）并检索相应的顶点索引。
     for (uint i = 0; i < mesh->mNumFaces; i++){
         aiFace face = mesh->mFaces[i];
@@ -84,26 +83,24 @@ Mesh Model::process_mesh(aiMesh *mesh, const aiScene *scene){
         for (uint j = 0; j < face.mNumIndices; j++)
             indices.push_back(face.mIndices[j]);
     }
-    // 加工材质
-    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-    // 我们假设着色器中的采样器名称约定。 每个漫反射纹理应命名为'texture_diffuseN'，其中N是从1到MAX_SAMPLER_NUMBER的序列号。
-    //同样适用于其他纹理，如下列总结：
-    // diffuse: texture_diffuseN
-    // specular: texture_specularN
-    // normal: texture_normalN
-    // 1. 漫反射贴图
-    std::vector<Texture> diffuseMaps = load_textures(material, aiTextureType_DIFFUSE, TEXTYPE::TEXTURE_DIFFUSE);
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-    // 2. 高光贴图
-    std::vector<Texture> specularMaps = load_textures(material, aiTextureType_SPECULAR, TEXTYPE::TEXTURE_SPECULAR);
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-    // 3.法线贴图
-    std::vector<Texture> normalMaps = load_textures(material, aiTextureType_HEIGHT,TEXTYPE::TEXTURE_NORMAL);
-    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-    // 4. 高度贴图
-    std::vector<Texture> heightMaps = load_textures(material, aiTextureType_AMBIENT, TEXTYPE::TEXTURE_HEIGHT);
-    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
-    // 返回从提取的网格数据创建的网格对象
+    std::vector<Texture> textures;
+    if(mesh->mMaterialIndex >= 0){
+        // 加工材质
+        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+        // 1. 漫反射贴图
+        std::vector<Texture> diffuseMaps = load_textures(material, aiTextureType_DIFFUSE, TEXTYPE::TEXTURE_DIFFUSE);
+        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+        // 2. 高光贴图
+        std::vector<Texture> specularMaps = load_textures(material, aiTextureType_SPECULAR, TEXTYPE::TEXTURE_SPECULAR);
+        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+        // 3.法线贴图
+        std::vector<Texture> normalMaps = load_textures(material, aiTextureType_HEIGHT,TEXTYPE::TEXTURE_NORMAL);
+        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+        // 4. 高度贴图
+        std::vector<Texture> heightMaps = load_textures(material, aiTextureType_AMBIENT, TEXTYPE::TEXTURE_HEIGHT);
+        textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+        // 返回从提取的网格数据创建的网格对象
+    }
     return Mesh(vertices, indices, textures);
 }
 
@@ -131,5 +128,27 @@ std::vector<Texture> Model::load_textures(aiMaterial *mat, aiTextureType type, T
         }
     }
     return textures;
+    // vector<Texture> textures;
+	// for (auto i = 0; i < mat->GetTextureCount(type); ++i){
+	// 	aiString name;
+	// 	mat->GetTexture(type, i, &name);
+	// 	auto toFind = textures_loaded.find(name.C_Str());
+	// 	if (toFind != textures_loaded.end()){
+	// 		textures.push_back(toFind->second);
+	// 	}else{
+	// 		Texture tex;
+	// 		auto filePath = StringUtil::Format("%s/%s", directory.c_str(), name.C_Str());
 
+	// 		auto aitexture = scene->GetEmbeddedTexture(name.C_Str());
+	// 		if (aitexture != nullptr)
+	// 			tex.id = Resource::LoadTextureFromAssImp(aitexture, GL_CLAMP, GL_LINEAR, GL_LINEAR);
+	// 		else
+	// 			tex.id = Resource::LoadTexture(filePath.c_str(), GL_REPEAT, GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
+	// 		tex.type = typeName;
+	// 		tex.Path = name;
+	// 		textures.push_back(tex);
+	// 		textures_loaded[name.C_Str()] = tex;
+	// 	}
+	// }
+	// return textures;
 }

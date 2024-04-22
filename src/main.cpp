@@ -19,7 +19,7 @@ int main(int argc, char const *argv[]){
     auto up      = glm::vec3(0.0f, 1.0f, 0.0f);      //正上方向
     const std::string vertex_path = "../assets/shader/shader.vs";
     const std::string fragment_path ="../assets/shader/shader.fs";
-    const std::string model_path = "../assets/obj/moon_.obj";
+    const std::string model_path = "../assets/obj/moon.obj";
 
     rend->add_shader(vertex_path,fragment_path);
     rend->add_model(model_path);

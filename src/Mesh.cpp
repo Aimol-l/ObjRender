@@ -28,12 +28,12 @@ void Mesh::init_mesh(){
     // 顶点双切VBO
     glEnableVertexAttribArray(4);	
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
-    // ids VBO
-    glEnableVertexAttribArray(5);
-    glVertexAttribIPointer(5, MAX_BONE_INFLUENCE, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
-    // weights VBO
-    glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, MAX_BONE_INFLUENCE, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
+    // // ids VBO
+    // glEnableVertexAttribArray(5);
+    // glVertexAttribIPointer(5, MAX_BONE_INFLUENCE, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
+    // // weights VBO
+    // glEnableVertexAttribArray(6);
+    // glVertexAttribPointer(6, MAX_BONE_INFLUENCE, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
     //*****************************EBO**************************************
     glGenBuffers(1, &m_ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
@@ -72,9 +72,8 @@ void Mesh::draw_mesh(Shader &shader){
         glBindTexture(GL_TEXTURE_2D, m_textures[i].id);
     }
     // draw mesh
+    glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(m_vao);
     glDrawElements(GL_TRIANGLES, static_cast<uint>(m_indices.size()), GL_UNSIGNED_INT, 0);
-
-    glBindVertexArray(0);
-    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }

@@ -1,0 +1,25 @@
+[2024-04-22 22:26:04.508] [opengl_logger] [info] OpenGL version: 4.6.0 NVIDIA 550.76
+[2024-04-22 22:26:04.508] [opengl_logger] [info] add_shader....
+[2024-04-22 22:26:04.508] [opengl_logger] [info] vertex_path = ../assets/shader/shader.vs
+[2024-04-22 22:26:04.508] [opengl_logger] [info] fragment_path = ../assets/shader/shader.fs
+[2024-04-22 22:26:04.539] [opengl_logger] [info] add_shader....done!!
+[2024-04-22 22:26:04.539] [opengl_logger] [info] add_model....
+[2024-04-22 22:26:04.595] [opengl_logger] [info] add_model....done!!
+[2024-04-22 22:26:04.595] [opengl_logger] [info] add_camera....
+[2024-04-22 22:26:04.595] [opengl_logger] [info] add_camera....done!!
+[2024-04-22 22:26:04.595] [opengl_logger] [info] set_window done!!
+[2024-04-22 22:26:04.595] [opengl_logger] [info] set_render done!!
+[2024-04-22 22:26:07.888] [opengl_logger] [info] mouse_clickBack
+[2024-04-22 22:26:08.438] [opengl_logger] [info] mouse_clickBack
+[2024-04-22 22:26:11.155] [opengl_logger] [info] mouse_clickBack
+[2024-04-22 22:26:11.589] [opengl_logger] [info] mouse_clickBack
+[2024-04-22 22:26:13.272] [opengl_logger] [info] mouse_clickBack
+[2024-04-22 22:26:14.089] [opengl_logger] [info] mouse_clickBack
+[2024-04-22 22:26:14.422] [opengl_logger] [info] mouse_clickBack
+[2024-04-22 22:26:14.839] [opengl_logger] [info] mouse_clickBack
+[2024-04-22 22:26:15.972] [opengl_logger] [info] mouse_clickBack
+[2024-04-22 22:26:16.705] [opengl_logger] [info] mouse_clickBack
+[2024-04-22 22:26:17.239] [opengl_logger] [info] mouse_clickBack
+[2024-04-22 22:26:17.639] [opengl_logger] [info] mouse_clickBack
+[2024-04-22 22:26:36.038] [opengl_logger] [info] mouse_clickBack
+[2024-04-22 22:26:36.122] [opengl_logger] [info] mouse_clickBack

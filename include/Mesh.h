@@ -5,7 +5,7 @@
 #include <vector>
 #include "Shader.h"
 
-constexpr static uint MAX_BONE_INFLUENCE = 4;
+// constexpr static uint MAX_BONE_INFLUENCE = 4;
 
 enum class TEXTYPE{
     TEXTURE_DIFFUSE, //漫反射纹理贴图
@@ -19,8 +19,6 @@ struct Vertex {
     glm::vec2 TexCoords;
     glm::vec3 Tangent;
     glm::vec3 Bitangent;
-	int m_BoneIDs[MAX_BONE_INFLUENCE]; //bone indexes which will influence this vertex
-	float m_Weights[MAX_BONE_INFLUENCE];//weights from each bone
 };
 struct Texture {
     uint id;
