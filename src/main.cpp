@@ -2,13 +2,14 @@
 #include <memory>
 #include "Window.h"
 #include "Render.h"
+#include "Lighting.h"
 #include "Application.h"
 
 int main(int argc, char const *argv[]){
     Window * win = new Window();
     Render* rend = new Render();
     //*******************************************************************************
-    if(!win->create_window(1500, 1200, "Opengl 3D 模型渲染Demo", false)){
+    if(!win->create_window(1280, 960, "Opengl 3D 模型渲染Demo", false)){
         std::cout<<"create window failed"<<std::endl;
         glfwTerminate();
         return 0;
@@ -24,6 +25,11 @@ int main(int argc, char const *argv[]){
     rend->add_shader(vertex_path,fragment_path);
     rend->add_model(model_path);
     rend->add_camera(pos,forward,up);
+    // 添加一个平行光
+    const std::string light_model = "../assets/obj/moon.obj";
+    ParallelLight* pll = new ParallelLight(light_model);
+    rend->add_light(pll);
+    // ....
     //*******************************************************************************
     auto &app = Application::getApp();
     app.set_window(win);

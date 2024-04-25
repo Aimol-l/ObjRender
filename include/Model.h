@@ -15,8 +15,8 @@
 class Model {
 public:
     Model(){};
-    Model(std::string &path) {load_model(path);} 
-    void load_model(std::string &path);
+    Model(const std::string &path) {load_model(path);} 
+    void load_model(const std::string &path);
     void draw_model(Shader &shader); 
 private:
     std::string m_directory;

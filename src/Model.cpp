@@ -5,7 +5,7 @@ void Model::draw_model(Shader &shader){
     for(auto&mesh:m_meshes) mesh.draw_mesh(shader);
 }
 
-void Model::load_model(std::string &path){
+void Model::load_model(const std::string &path){
     Assimp::Importer import;
     // const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);    
     const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);

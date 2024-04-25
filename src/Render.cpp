@@ -25,7 +25,11 @@ void Render::add_shader(const std::string &vertex_path, const std::string &fragm
     Log::info("add_shader....done!!");
 }
 
-void Render::add_model(std::string model_path){
+void Render::add_light(Lighting* temp){
+    if(temp != nullptr) m_lights.push_back(temp);
+}
+
+void Render::add_model(const std::string& model_path){
     Log::info("add_model....");
     m_model->load_model(model_path);
     Log::info("add_model....done!!");
@@ -45,6 +49,7 @@ glm::mat4x4 Render::get_view(){
 
 void Render::draw(){
     m_model->draw_model(*m_shader);
+    for(auto*light:m_lights) light->draw_light(*m_shader);
 }
 
 void Render::set_shader(const std::string &name, int val) const

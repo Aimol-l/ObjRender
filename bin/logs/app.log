@@ -1,21 +1,11 @@
-[2024-04-22 23:31:03.317] [opengl_logger] [info] OpenGL version: 4.6.0 NVIDIA 550.76
-[2024-04-22 23:31:03.317] [opengl_logger] [info] add_shader....
-[2024-04-22 23:31:03.317] [opengl_logger] [info] vertex_path = ../assets/shader/shader.vs
-[2024-04-22 23:31:03.317] [opengl_logger] [info] fragment_path = ../assets/shader/shader.fs
-[2024-04-22 23:31:03.317] [opengl_logger] [info] add_shader....done!!
-[2024-04-22 23:31:03.317] [opengl_logger] [info] add_model....
-[2024-04-22 23:31:03.456] [opengl_logger] [info] add_model....done!!
-[2024-04-22 23:31:03.456] [opengl_logger] [info] add_camera....
-[2024-04-22 23:31:03.456] [opengl_logger] [info] add_camera....done!!
-[2024-04-22 23:31:03.456] [opengl_logger] [info] set_window done!!
-[2024-04-22 23:31:03.456] [opengl_logger] [info] set_render done!!
-[2024-04-22 23:31:04.198] [opengl_logger] [info] mouse_clickBack
-[2024-04-22 23:31:04.932] [opengl_logger] [info] mouse_clickBack
-[2024-04-22 23:31:06.632] [opengl_logger] [info] mouse_clickBack
-[2024-04-22 23:31:07.299] [opengl_logger] [info] mouse_clickBack
-[2024-04-22 23:31:07.465] [opengl_logger] [info] mouse_clickBack
-[2024-04-22 23:31:08.566] [opengl_logger] [info] mouse_clickBack
-[2024-04-22 23:31:08.849] [opengl_logger] [info] mouse_clickBack
-[2024-04-22 23:31:09.232] [opengl_logger] [info] mouse_clickBack
-[2024-04-22 23:31:10.216] [opengl_logger] [info] mouse_clickBack
-[2024-04-22 23:31:10.782] [opengl_logger] [info] mouse_clickBack
+[2024-04-23 15:22:03.545] [opengl_logger] [info] OpenGL version: 4.6.0 NVIDIA 550.67
+[2024-04-23 15:22:03.545] [opengl_logger] [info] add_shader....
+[2024-04-23 15:22:03.545] [opengl_logger] [info] vertex_path = ../assets/shader/shader.vs
+[2024-04-23 15:22:03.545] [opengl_logger] [info] fragment_path = ../assets/shader/shader.fs
+[2024-04-23 15:22:03.588] [opengl_logger] [info] add_shader....done!!
+[2024-04-23 15:22:03.588] [opengl_logger] [info] add_model....
+[2024-04-23 15:22:03.801] [opengl_logger] [info] add_model....done!!
+[2024-04-23 15:22:03.801] [opengl_logger] [info] add_camera....
+[2024-04-23 15:22:03.801] [opengl_logger] [info] add_camera....done!!
+[2024-04-23 15:22:03.801] [opengl_logger] [info] set_window done!!
+[2024-04-23 15:22:03.801] [opengl_logger] [info] set_render done!!

@@ -22,6 +22,7 @@ void Application::run(){
         m_render->set_shader("modelMat",modelMat);
         m_render->set_shader("projectMat",projectMat);
         m_render->set_shader("viewMat",viewMat);
+        
         // draw
         m_render->draw();
         m_window->update();

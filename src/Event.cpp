@@ -67,3 +67,8 @@ void mouse_clickBack(GLFWwindow *window, int button, int action, int mods){
        PRESSED = false;
     }
 }
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
+
+    
+}
