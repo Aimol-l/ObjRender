@@ -9,9 +9,9 @@ out vec2 TexCoords;
 out vec3 FragPos;
 out vec3 Normal;
 
-uniform mat4 modelMat;
-uniform mat4 viewMat;
-uniform mat4 projectMat;
+uniform mat4x4 modelMat;
+uniform mat4x4 viewMat;
+uniform mat4x4 projectMat;
 
 void main() {
     gl_Position = projectMat * viewMat * modelMat * vec4(aPos, 1.0);
