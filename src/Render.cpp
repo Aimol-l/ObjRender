@@ -47,6 +47,7 @@ glm::mat4x4 Render::get_view(){
     return m_camera->get_view_mat();
 }
 
+//绘制上所有的mesh,lamp
 void Render::draw(){
     m_model->draw_model(*m_shader);
     for(auto*light:m_lights) light->draw_light(*m_shader);
