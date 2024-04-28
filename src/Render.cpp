@@ -26,7 +26,11 @@ void Render::add_shader(const std::string &vertex_path, const std::string &fragm
 }
 
 void Render::add_light(Lighting* temp){
-    if(temp != nullptr) m_lights.push_back(temp);
+    if(temp != nullptr) {
+        m_lights.push_back(temp);
+        GLuint loc_num = glGetUniformLocation(m_shader->get_id(), "num_light");
+        glUniform1i(loc_num, static_cast<int>(m_lights.size()));
+    }
 }
 
 void Render::add_model(const std::string& model_path){

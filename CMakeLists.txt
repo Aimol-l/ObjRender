@@ -10,7 +10,7 @@ get_filename_component(PROJECT_DIR ${CMAKE_CURRENT_LIST_FILE} DIRECTORY)
 # 设置可执行文件的输出目录为 lib 目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_DIR}/bin)
 
-set(CMAKE_BUILD_PARALLEL_LEVEL 8) 
+set(CMAKE_BUILD_PARALLEL_LEVEL 16) 
 
 project(
     ${THIS_PROJECT_NAME}        #项目名称

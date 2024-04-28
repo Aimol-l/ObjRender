@@ -29,7 +29,6 @@ int main(int argc, char const *argv[]){
     const std::string light_model = "../assets/obj/moon.obj";
     Lighting* pll = new Lighting(0,light_model);
     rend->add_light(pll);
-    // ....
     //*******************************************************************************
     auto &app = Application::getApp();
     app.set_window(win);

@@ -3,15 +3,7 @@
 in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
-
 out vec4 FragColor;
-
-uniform sampler2D texture_diffuse1;
-
-#define MAX_LIGHTS 100
-uniform Lighting lights[MAX_LIGHTS];
-uniform int num_light;
-
 struct Lighting {
     int type;       // {0:平行光, 1:点光源, 2:聚光灯}
     vec3 position;  //光源位置
@@ -20,25 +12,32 @@ struct Lighting {
     vec3 ambient;   //环境光系数
     vec3 diffuse;   //漫反射系数
     vec3 specular;  //镜面反射系数
+    float constant;
+    float linear;
+    float quadratic;
+    float cut_off;
+    float outer_cut_off;
 };      
 
-vec3 CalculateLighting(Lighting light, vec3 normal, vec3 fragPos, vec3 viewDir) {
-    vec3 result = vec3(0.0);
-    if (light.type == 0) {
-        result += ParallelLighting(light, normal, fragPos, viewDir);
-    } else if (light.type == 1) {
-        result += PointLighting(light, normal, fragPos, viewDir);
-    } else if (light.type == 2) {
-        result += SpotLighting(light, normal, fragPos, viewDir);
-    }
-    return result;
-}
+#define MAX_LIGHTS 100
+uniform Lighting lights[MAX_LIGHTS];
+uniform int num_light;
+uniform vec3 camera_pos;
+uniform sampler2D texture_diffuse1;
 
-vec3 ParallelLighting(Lighting light, vec3 normal, vec3 fragPos, vec3 viewDir) {
-    vec3 lightDir = normalize(-light.direction);
-    vec3 diff = max(dot(normal, lightDir), 0.0) * light.diffuse * vec3(texture(texture_diffuse1, TexCoords));
-    vec3 spec = pow(max(dot(viewDir, reflect(-lightDir, normal)), 0.0), material.shininess) * light.specular * vec3(texture(texture_diffuse1, TexCoords));
-    return light.ambient + diff + spec;
+vec3 ParallelLighting(Lighting light, vec3 normal, vec3 viewDir) {
+    // 衰减系数
+    // float ratio = 1/()
+    // 环境光
+    vec3 ambient_ = light.ambient * light.color;
+    //漫反射
+    vec3 lightDir = normalize(light.position - fragPos);
+    vec3 diffuse = max(dot(normal, lightDir), 0.0) * light.color * light.diffuse;
+    //镜面反射
+    vec3 viewDir = normalize(light.direction - fragPos);
+    vec3 reflectDir = reflect(-light.direction, norm);
+    vec3 specular = pow(max(dot(viewDir, reflectDir), 0.0), 32) * light.color * light.specular;
+
 }
 
 vec3 PointLighting(Lighting light, vec3 normal, vec3 fragPos, vec3 viewDir) {
@@ -61,10 +60,20 @@ vec3 SpotLighting(Lighting light, vec3 normal, vec3 fragPos, vec3 viewDir) {
     vec3 spec = pow(max(dot(viewDir, reflect(-lightDir, normal)), 0.0), material.shininess) * light.specular * vec3(texture(texture_diffuse1, TexCoords));
     return (light.ambient + diff + spec) * attenuation * intensity;
 }
-
+vec3 CalculateLighting(Lighting light, vec3 normal, vec3 fragPos, vec3 viewDir) {
+    vec3 result = vec3(0.0);
+    if (light.type == 0) {
+        result += ParallelLighting(light, normal, fragPos, viewDir);
+    } else if (light.type == 1) {
+        result += PointLighting(light, normal, fragPos, viewDir);
+    } else if (light.type == 2) {
+        result += SpotLighting(light, normal, fragPos, viewDir);
+    }
+    return result;
+}
 void main() {
-    vec3 norm = normalize(Normal);
-    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 norm = normalize(Normal); // 片段单位法向量
+    vec3 viewDir = normalize(viewPos - FragPos); //
     vec3 lighting = vec3(0.0);
     for (int i = 0; i < num_light; ++i) {
         lighting += CalculateLighting(lights[i], norm, FragPos, viewDir);

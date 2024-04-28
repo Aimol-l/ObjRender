@@ -37,7 +37,7 @@ public:
 public:
     ~Lighting();
     //{0:平行光, 1:点光源, 2:聚光灯}
-    Lighting(int type = 0,const std::string & model_path);
+    Lighting(int type,const std::string & model_path);
     void draw_light(Shader &shader,size_t index);
     //平行光
     inline void init(glm::vec3&,glm::vec3&);
