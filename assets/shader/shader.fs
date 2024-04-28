@@ -17,7 +17,6 @@ struct Lighting {
     vec3 position;  //光源位置
     vec3 direction; //光源方向
     vec3 color;     //光源颜色
-
     vec3 ambient;   //环境光系数
     vec3 diffuse;   //漫反射系数
     vec3 specular;  //镜面反射系数
@@ -67,7 +66,7 @@ void main() {
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 lighting = vec3(0.0);
-    for (int i = 0; i < numLights; ++i) {
+    for (int i = 0; i < num_light; ++i) {
         lighting += CalculateLighting(lights[i], norm, FragPos, viewDir);
     }
     FragColor = vec4(lighting, 1.0);

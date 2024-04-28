@@ -50,7 +50,9 @@ glm::mat4x4 Render::get_view(){
 //绘制上所有的mesh,lamp
 void Render::draw(){
     m_model->draw_model(*m_shader);
-    for(auto*light:m_lights) light->draw_light(*m_shader);
+    GLuint num_light_loc = glGetUniformLocation(m_shader->get_id(), "num_light");
+    glUniform1i(num_light_loc, static_cast<int>(m_lights.size()));
+    for(size_t index;index<m_lights.size();++index) m_lights[index]->draw_light(*m_shader,index);
 }
 
 void Render::set_shader(const std::string &name, int val) const
