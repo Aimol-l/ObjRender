@@ -57,5 +57,6 @@ void main() {
     for (int i = 0; i < num_light; ++i) {
         lighting += CalculateLighting(lights[i], norm, FragPos, camera_direction);
     }
-    FragColor = vec4(lighting, 1.0);
+    FragColor = texture(texture_diffuse1, TexCoords);
+    // FragColor = vec4(lighting, 1.0);
 }

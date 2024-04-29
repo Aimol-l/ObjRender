@@ -59,6 +59,7 @@ void Render::draw(){
     m_model->draw_model(*m_shader);
     for(size_t index;index<m_lights.size();++index) 
         m_lights[index]->draw_light(*m_shader,index);
+
 }
 
 void Render::set_shader(const std::string &name, int val) const

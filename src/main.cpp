@@ -15,7 +15,7 @@ int main(int argc, char const *argv[]){
         return 0;
     }
     //*******************************************************************************
-    auto pos     = glm::vec3(0.0f, 0.0f, 5.0f);      //相机位置
+    auto pos     = glm::vec3(0.0f, 0.0f, 10.0f);      //相机位置
     auto forward = glm::vec3(0.0f, 0.0f, 1.0f);   //相机方向
     auto up      = glm::vec3(0.0f, 1.0f, 0.0f);      //正上方向
     const std::string vertex_path = "../assets/shader/shader.vs";
@@ -26,7 +26,7 @@ int main(int argc, char const *argv[]){
     rend->add_model(model_path);
     rend->add_camera(pos,forward,up);
     // 添加一个平行光
-    const std::string light_model = "../assets/obj/moon.obj";
+    const std::string light_model = "../assets/obj/123456.obj";
     Lighting* pll = new Lighting(0,light_model);
     rend->add_light(pll);
     //*******************************************************************************
