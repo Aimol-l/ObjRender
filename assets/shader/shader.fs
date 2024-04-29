@@ -33,30 +33,45 @@ vec3 ParallelLighting(Lighting light, vec3 normal, vec3 camera_direction) {
     vec3 ambient_ = light.ambient * light.color;
     //漫反射
     vec3 diffuse_ = max(dot(normal, normalize(light.direction)), 0.0) * light.color * light.diffuse;
-    //镜面反射
+    // 镜面反射
     vec3 reflect_direct = reflect(normalize(light.direction), normal);  // 输入法线方向，光线方向，输出反射方向
     float spec = pow(max(dot(camera_direction, reflect_direct), 0.0), 32);
     vec3 specular_ = light.specular * spec * light.color;
     return attenuation*(ambient_ + diffuse_ + specular_);
 }
-// vec3 PointLighting(Lighting light, vec3 normal, vec3 fragPos, vec3 camera_direction) {
-// }
+vec3 PointLighting(Lighting light, vec3 normal, vec3 camera_direction) {
+    // 衰减系数
+    float distance = length(light.position - FragPos);
+    float attenuation = 3.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
+    // 环境光
+    vec3 ambient_ = light.ambient * light.color * texture(texture_diffuse1, TexCoords).rgb;
+    // 漫反射 
+    vec3 light_direct = normalize(light.position - FragPos);
+    vec3 diffuse_ = max(dot(normal, light_direct), 0.0) * light.color * light.diffuse * texture(texture_diffuse1, TexCoords).rgb;
+    // 镜面反射
+    vec3 reflect_direct = reflect(light_direct, normal);  // 输入法线方向，光线方向，输出反射方向
+    float spec = pow(max(dot(camera_direction, reflect_direct), 0.0), 24);
+    vec3 specular_ = light.specular * spec * light.color * texture(texture_diffuse1, TexCoords).rgb;
+    //**********
+    return (ambient_ + attenuation*diffuse_ + attenuation*specular_);
+}
 // vec3 SpotLighting(Lighting light, vec3 normal, vec3 fragPos, vec3 camera_direction) {
 // }
-vec3 CalculateLighting(Lighting light, vec3 normal, vec3 fragPos, vec3 camera_direction) {
-    vec3 result = vec3(0.0);
-    if (light.type == 0) {
-        result += ParallelLighting(light, normal, camera_direction);
-    }
-    return result;
+vec3 CalculateLighting(Lighting light, vec3 normal, vec3 camera_direction) {
+    // if (light.type == 0) {
+    //    return ParallelLighting(light, normal, camera_direction);
+    // }
+    // if (light.type == 1) {
+       return PointLighting(light, normal, camera_direction);
+    // }
 }
 void main() {
     vec3 norm = normalize(Normal); // 片段单位法向量
     vec3 camera_direction = normalize(camera_pos - FragPos); //相机观察的方向
     vec3 lighting = vec3(0.0);
-    for (int i = 0; i < num_light; ++i) {
-        lighting += CalculateLighting(lights[i], norm, FragPos, camera_direction);
+    for (int i = 0; i < num_light; i++) {
+        lighting += CalculateLighting(lights[i], norm, camera_direction);
     }
-    FragColor = texture(texture_diffuse1, TexCoords);
-    // FragColor = vec4(lighting, 1.0);
+    // vec3 lighting = PointLighting(lights[0], norm, camera_direction);
+    FragColor = vec4(lighting, 1.0);
 }

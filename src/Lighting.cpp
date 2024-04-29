@@ -39,21 +39,17 @@ void Lighting::draw_light(Shader &shader,size_t index){
     glUniform1f(loc_quadratic, m_quadratic);
     glUniform1f(loc_cut_off, m_cut_off);
     glUniform1f(loc_outer_cut_off, m_outer_cut_off);
-
     //******************************设置光源位置**************************************
     auto now =  std::chrono::system_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(now - create_time) / 1000000.0f;
-    // std::cout<<"duration = "<<duration.count()<<std::endl;
-    glm::vec3 new_pos = {3*glm::cos(duration.count()),3*glm::sin(duration.count()),0};
+    glm::vec3 new_pos = {5*glm::cos(duration.count()),5*glm::sin(duration.count()),0};
     this->set_pos(new_pos);
+    // this->set_direction();
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, m_pos);// 设置模型的位置
-    // model = glm::rotate(model, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));// 设置模型的旋转
     model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));// 设置模型的缩放
     shader.set_mat4("modelMat",model);
     m_light_model->draw_model(shader);
-
-    
 }
 
 void Lighting::init(glm::vec3 &pos, glm::vec3 &color){

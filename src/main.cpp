@@ -27,7 +27,7 @@ int main(int argc, char const *argv[]){
     rend->add_camera(pos,forward,up);
     // 添加一个平行光
     const std::string light_model = "../assets/obj/123456.obj";
-    Lighting* pll = new Lighting(0,light_model);
+    Lighting* pll = new Lighting(1,light_model);
     rend->add_light(pll);
     //*******************************************************************************
     auto &app = Application::getApp();
