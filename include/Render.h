@@ -15,7 +15,6 @@ private:
 public:
     Render();
     ~Render();
-    glm::mat4x4 get_view();
 
     void draw();
     void set_shader(const std::string &name,int val)const;

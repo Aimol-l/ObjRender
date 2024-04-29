@@ -32,7 +32,6 @@ void Render::add_light(Lighting* temp){
         glUniform1i(loc_num, static_cast<int>(m_lights.size()));
     }
 }
-
 void Render::add_model(const std::string& model_path){
     Log::info("add_model....");
     m_model->load_model(model_path);
@@ -46,17 +45,20 @@ void Render::add_camera(glm::vec3 &pos, glm::vec3 &forward, glm::vec3 &up){
     m_camera->set_rotation(0,180,0);
     Log::info("add_camera....done!!");
 }
-
-glm::mat4x4 Render::get_view(){
-    return m_camera->get_view_mat();
-}
-
 //绘制上所有的mesh,lamp
 void Render::draw(){
+    glm::mat4 modelMat = glm::mat4(1.0f);
+    glm::mat4 projectMat = glm::perspective(glm::radians(45.0f),1024.0f / 800.0f, 0.1f, 100.0f);
+    glm::mat4 viewMat = m_camera->get_view_mat();
+    auto camera_pos = m_camera->get_position();
+    //给shader设置MVP矩阵
+    this->set_shader("modelMat",modelMat);
+    this->set_shader("projectMat",projectMat);
+    this->set_shader("viewMat",viewMat);
+    this->set_shader("camera_pos",camera_pos);
     m_model->draw_model(*m_shader);
-    GLuint num_light_loc = glGetUniformLocation(m_shader->get_id(), "num_light");
-    glUniform1i(num_light_loc, static_cast<int>(m_lights.size()));
-    for(size_t index;index<m_lights.size();++index) m_lights[index]->draw_light(*m_shader,index);
+    for(size_t index;index<m_lights.size();++index) 
+        m_lights[index]->draw_light(*m_shader,index);
 }
 
 void Render::set_shader(const std::string &name, int val) const

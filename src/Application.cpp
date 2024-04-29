@@ -15,14 +15,6 @@ void Application::run(){
     while (!this->m_window->close()){
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f); 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
-        glm::mat4 modelMat = glm::mat4(1.0f);
-        glm::mat4 projectMat = glm::perspective(glm::radians(45.0f),1024.0f / 800.0f, 0.1f, 100.0f);
-        glm::mat4 viewMat = m_render->get_view();
-        //给shader设置MVP矩阵
-        m_render->set_shader("modelMat",modelMat);
-        m_render->set_shader("projectMat",projectMat);
-        m_render->set_shader("viewMat",viewMat);
-        
         // draw
         m_render->draw();
         m_window->update();

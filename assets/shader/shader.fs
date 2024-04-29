@@ -19,64 +19,43 @@ struct Lighting {
     float outer_cut_off;
 };      
 
-#define MAX_LIGHTS 100
+#define MAX_LIGHTS 20
 uniform Lighting lights[MAX_LIGHTS];
 uniform int num_light;
 uniform vec3 camera_pos;
 uniform sampler2D texture_diffuse1;
 
-vec3 ParallelLighting(Lighting light, vec3 normal, vec3 viewDir) {
+vec3 ParallelLighting(Lighting light, vec3 normal, vec3 camera_direction) {
     // 衰减系数
-    // float ratio = 1/()
+    float distance = length(light.position - FragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
     // 环境光
     vec3 ambient_ = light.ambient * light.color;
     //漫反射
-    vec3 lightDir = normalize(light.position - fragPos);
-    vec3 diffuse = max(dot(normal, lightDir), 0.0) * light.color * light.diffuse;
+    vec3 diffuse_ = max(dot(normal, normalize(light.direction)), 0.0) * light.color * light.diffuse;
     //镜面反射
-    vec3 viewDir = normalize(light.direction - fragPos);
-    vec3 reflectDir = reflect(-light.direction, norm);
-    vec3 specular = pow(max(dot(viewDir, reflectDir), 0.0), 32) * light.color * light.specular;
-
+    vec3 reflect_direct = reflect(normalize(light.direction), normal);  // 输入法线方向，光线方向，输出反射方向
+    float spec = pow(max(dot(camera_direction, reflect_direct), 0.0), 32);
+    vec3 specular_ = light.specular * spec * light.color;
+    return attenuation*(ambient_ + diffuse_ + specular_);
 }
-
-vec3 PointLighting(Lighting light, vec3 normal, vec3 fragPos, vec3 viewDir) {
-    vec3 lightDir = normalize(light.position - fragPos);
-    float distance = length(light.position - fragPos);
-    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
-    vec3 diff = max(dot(normal, lightDir), 0.0) * light.diffuse * vec3(texture(texture_diffuse1, TexCoords));
-    vec3 spec = pow(max(dot(viewDir, reflect(-lightDir, normal)), 0.0), material.shininess) * light.specular * vec3(texture(texture_diffuse1, TexCoords));
-    return (light.ambient + diff + spec) * attenuation;
-}
-
-vec3 SpotLighting(Lighting light, vec3 normal, vec3 fragPos, vec3 viewDir) {
-    vec3 lightDir = normalize(light.position - fragPos);
-    float theta = dot(lightDir, normalize(-light.direction));
-    float epsilon = light.cutOff - light.outerCutOff;
-    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
-    float distance = length(light.position - fragPos);
-    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
-    vec3 diff = max(dot(normal, lightDir), 0.0) * light.diffuse * vec3(texture(texture_diffuse1, TexCoords));
-    vec3 spec = pow(max(dot(viewDir, reflect(-lightDir, normal)), 0.0), material.shininess) * light.specular * vec3(texture(texture_diffuse1, TexCoords));
-    return (light.ambient + diff + spec) * attenuation * intensity;
-}
-vec3 CalculateLighting(Lighting light, vec3 normal, vec3 fragPos, vec3 viewDir) {
+// vec3 PointLighting(Lighting light, vec3 normal, vec3 fragPos, vec3 camera_direction) {
+// }
+// vec3 SpotLighting(Lighting light, vec3 normal, vec3 fragPos, vec3 camera_direction) {
+// }
+vec3 CalculateLighting(Lighting light, vec3 normal, vec3 fragPos, vec3 camera_direction) {
     vec3 result = vec3(0.0);
     if (light.type == 0) {
-        result += ParallelLighting(light, normal, fragPos, viewDir);
-    } else if (light.type == 1) {
-        result += PointLighting(light, normal, fragPos, viewDir);
-    } else if (light.type == 2) {
-        result += SpotLighting(light, normal, fragPos, viewDir);
+        result += ParallelLighting(light, normal, camera_direction);
     }
     return result;
 }
 void main() {
     vec3 norm = normalize(Normal); // 片段单位法向量
-    vec3 viewDir = normalize(viewPos - FragPos); //
+    vec3 camera_direction = normalize(camera_pos - FragPos); //相机观察的方向
     vec3 lighting = vec3(0.0);
     for (int i = 0; i < num_light; ++i) {
-        lighting += CalculateLighting(lights[i], norm, FragPos, viewDir);
+        lighting += CalculateLighting(lights[i], norm, FragPos, camera_direction);
     }
     FragColor = vec4(lighting, 1.0);
 }

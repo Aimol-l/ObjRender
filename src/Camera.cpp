@@ -22,7 +22,11 @@ glm::mat4x4 Camera::get_view_mat(){
     glm::mat4 viewMat =  glm::lookAt(m_position, m_position + m_forward, m_up);
     return  viewMat;
 }
-void Camera::set_up(glm::vec3 pos){
+glm::vec3 Camera::get_position(){
+    return m_position;
+}
+void Camera::set_up(glm::vec3 pos)
+{
     this->m_up = pos;
 }
 void Camera::set_position(glm::vec3 pos){
