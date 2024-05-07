@@ -8,10 +8,10 @@
 #include "Lighting.h"
 class Render{
 private:
-    Model* m_model = nullptr;
-    Camera* m_camera = nullptr;
-    Shader* m_shader = nullptr;
-    std::vector<Lighting*> m_lights;
+    std::unique_ptr<Model> m_model = nullptr;
+    std::unique_ptr<Camera> m_camera = nullptr;
+    std::unique_ptr<Shader> m_shader = nullptr;
+    std::vector<std::unique_ptr<Lighting>> m_lights;
 public:
     Render();
     ~Render();
@@ -26,7 +26,7 @@ public:
     void set_shader(const std::string &name,const glm::mat3 &mat)const;
     void set_shader(const std::string &name,const glm::mat4 &mat)const;
 
-    void add_light(Lighting* temp);
+    void add_light(std::unique_ptr<Lighting>&light);
     void add_model(const std::string &model_path);
     void add_camera(glm::vec3& pos,glm::vec3 &forward,glm::vec3 &up);
     void add_shader(const std::string &vertex_path,const std::string &fragment_path);

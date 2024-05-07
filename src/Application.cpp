@@ -1,8 +1,7 @@
 #include "Application.h"
 #include "Log.h"
 Application::~Application(){
-    // glDeleteVertexArrays(1, &VAO);
-    // glDeleteBuffers(1, &VBO);
+
 }
 
 Application &Application::getApp(){
@@ -15,18 +14,18 @@ void Application::run(){
     while (!this->m_window->close()){
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f); 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
-        // draw
+
         m_render->draw();
         m_window->update();
     }
 }
 
-void Application::set_window(Window *win){ 
-    m_window = std::unique_ptr<Window>(win);
+void Application::set_window(std::unique_ptr<Window>& win){ 
+    m_window = std::move(win);
     Log::info("set_window done!!");
 }
 
-void Application::set_render(Render *rend){
-    m_render = std::unique_ptr<Render>(rend);
+void Application::set_render(std::unique_ptr<Render>&rend){
+    m_render = std::move(rend);
     Log::info("set_render done!!");
 }

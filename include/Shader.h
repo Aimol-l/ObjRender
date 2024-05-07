@@ -10,6 +10,7 @@ private:
 public:
     ~Shader(){glDeleteProgram(program_id);}
     Shader(){};
+    Shader(const std::string &vertex_path, const std::string &fragment_path){create_shader(vertex_path,fragment_path);};
     void use();
     unsigned int get_id(){return program_id;};
     int create_shader(const std::string &vertex_path, const std::string &fragment_path);

@@ -3,10 +3,9 @@
 
 //********************************************************
 Lighting::~Lighting(){
-   delete m_light_model;
 }
-Lighting::Lighting(int type,const std::string &model_path){
-    m_light_model = new Model();
+Lighting::Lighting(int type,const std::string &model_path):m_type(type){
+    m_light_model = std::make_unique<Model>();
     m_light_model->load_model(model_path);
 }
 

@@ -16,6 +16,6 @@ public:
     Application& operator=(const Application & g) = delete; //赋值构造函数
 
     void run();
-    void set_window(Window * win);
-    void set_render(Render * rend);
+    void set_window(std::unique_ptr<Window>& win);
+    void set_render(std::unique_ptr<Render>& rend);
 };

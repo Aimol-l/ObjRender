@@ -23,7 +23,7 @@ protected:
     float m_outer_cut_off = 15.0f; //聚光灯范围2
 
     std::chrono::system_clock::time_point create_time = std::chrono::system_clock::now();;
-    Model* m_light_model;
+    std::unique_ptr<Model> m_light_model;
 private:
      void set_type(int type){m_type = type;}
      void set_pos(glm::vec3& pos){ m_pos = pos;}

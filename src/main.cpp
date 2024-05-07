@@ -5,9 +5,13 @@
 #include "Lighting.h"
 #include "Application.h"
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 int main(int argc, char const *argv[]){
-    Window * win = new Window();
-    Render* rend = new Render();
+    auto win = std::make_unique<Window>();
+    auto rend = std::make_unique<Render>();
     //*******************************************************************************
     if(!win->create_window(1280, 960, "Opengl 3D 模型渲染Demo", false)){
         std::cout<<"create window failed"<<std::endl;
@@ -27,8 +31,8 @@ int main(int argc, char const *argv[]){
     rend->add_camera(pos,forward,up);
     // 添加一个平行光
     const std::string light_model = "../assets/obj/123456.obj";
-    Lighting* pll = new Lighting(1,light_model);
-    rend->add_light(pll);
+    auto light = std::make_unique<Lighting>(1,light_model);
+    rend->add_light(light);
     //*******************************************************************************
     auto &app = Application::getApp();
     app.set_window(win);

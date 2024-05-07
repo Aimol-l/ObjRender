@@ -9,32 +9,26 @@ void check_error(std::string info){
     }
 }
 Render::Render(){
-    m_camera = Camera::get_instence();
-    m_shader = new Shader();
-    m_model = new Model();
+    m_camera = std::make_unique<Camera>(Camera::get_instence());
 };
-Render::~Render(){
-    delete m_camera,m_shader,m_model;
-}
+Render::~Render(){}
 void Render::add_shader(const std::string &vertex_path, const std::string &fragment_path){
     Log::info("add_shader....");
     Log::info("vertex_path = "+vertex_path);
     Log::info("fragment_path = "+fragment_path);
-    m_shader->create_shader(vertex_path,fragment_path);
+    m_shader = std::make_unique<Shader>(vertex_path,fragment_path);
     m_shader->use();
     Log::info("add_shader....done!!");
 }
 
-void Render::add_light(Lighting* temp){
-    if(temp != nullptr) {
-        m_lights.push_back(temp);
-        GLuint loc_num = glGetUniformLocation(m_shader->get_id(), "num_light");
-        glUniform1i(loc_num, static_cast<int>(m_lights.size()));
-    }
+void Render::add_light(std::unique_ptr<Lighting>&light){
+    m_lights.push_back(std::move(light));
+    GLuint loc_num = glGetUniformLocation(m_shader->get_id(), "num_light");
+    glUniform1i(loc_num, static_cast<int>(m_lights.size()));
 }
 void Render::add_model(const std::string& model_path){
     Log::info("add_model....");
-    m_model->load_model(model_path);
+    m_model = std::make_unique<Model>(model_path);
     Log::info("add_model....done!!");
 }
 void Render::add_camera(glm::vec3 &pos, glm::vec3 &forward, glm::vec3 &up){
