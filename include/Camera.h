@@ -10,7 +10,7 @@ private:
     glm::vec3 m_position; //相机位置
     glm::vec3 m_rotation;
     glm::vec3 m_forward; //相机看的方向
-
+    glm::vec3 m_scale;
     Camera() = default; 
 public:
     ~Camera(){};
@@ -22,6 +22,9 @@ public:
     }
     glm::mat4x4 get_view_mat();
     glm::vec3 get_position();
+    glm::mat4 get_scale();
+
+    void set_scale(double xoffset, double yoffset);
     void set_up(glm::vec3 pos);
     void set_position(glm::vec3 pos);
     void set_forward(glm::vec3 pos);

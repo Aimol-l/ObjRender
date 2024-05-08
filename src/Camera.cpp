@@ -25,6 +25,21 @@ glm::mat4x4 Camera::get_view_mat(){
 glm::vec3 Camera::get_position(){
     return m_position;
 }
+glm::mat4 Camera::get_scale(){
+    glm::mat4 ret;
+	ret = glm::transpose(glm::mat4(
+        m_scale.x, 0, 0, 0,
+        0, m_scale.y, 0, 0,
+        0, 0, m_scale.z, 0,
+        0, 0, 0, 1
+    ));
+	return ret;
+}
+void Camera::set_scale(double xoffset, double yoffset){
+    m_scale.x += yoffset * 0.01;
+    m_scale.y += yoffset * 0.01; 
+    m_scale.z = 1;
+}
 void Camera::set_up(glm::vec3 pos)
 {
     this->m_up = pos;

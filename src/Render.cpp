@@ -1,5 +1,4 @@
 #include "Render.h"
-#include "Event.h"
 #include "Log.h"
 
 void check_error(std::string info){
@@ -41,7 +40,7 @@ void Render::add_camera(glm::vec3 &pos, glm::vec3 &forward, glm::vec3 &up){
 }
 //绘制上所有的mesh,lamp
 void Render::draw(){
-    glm::mat4 modelMat = glm::mat4(1.0f);
+    glm::mat4 modelMat = m_camera->get_scale() * glm::mat4(1.0f);
     glm::mat4 projectMat = glm::perspective(glm::radians(45.0f),1024.0f / 800.0f, 0.1f, 100.0f);
     glm::mat4 viewMat = m_camera->get_view_mat();
     auto camera_pos = m_camera->get_position();
