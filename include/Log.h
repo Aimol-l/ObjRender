@@ -4,6 +4,9 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/basic_file_sink.h"
 #include <filesystem>
+
+namespace ren{
+
 class Log {
 public:
     ~Log(){spdlog::shutdown();}
@@ -38,3 +41,4 @@ private:
     // 日志器指针
     std::shared_ptr<spdlog::logger> logger_;
 };
+}

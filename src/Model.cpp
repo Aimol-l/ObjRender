@@ -1,11 +1,11 @@
 #include "Model.h"
 
 
-void Model::draw_model(Shader &shader){
+void ren::Model::draw_model(Shader &shader){
     for(auto&mesh:m_meshes) mesh.draw_mesh(shader);
 }
 
-void Model::load_model(const std::string &path){
+void ren::Model::load_model(const std::string &path){
     Assimp::Importer import;
     // const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);    
     const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
@@ -14,11 +14,10 @@ void Model::load_model(const std::string &path){
         return;
     }
     m_directory = path.substr(0, path.find_last_of('/'));
-    std::cout<<m_directory<<std::endl;
     process_node(scene->mRootNode, scene);
 }
 
-uint Model::load_images(const std::string &name, const std::string &dir_path, bool gamma){
+uint ren::Model::load_images(const std::string &name, const std::string &dir_path, bool gamma){
 	auto file_path = name;
 	uint textureID;
 	glGenTextures(1, &textureID);
@@ -47,7 +46,7 @@ uint Model::load_images(const std::string &name, const std::string &dir_path, bo
 	return textureID;
 }
 
-void Model::process_node(aiNode *node, const aiScene *scene){
+void ren::Model::process_node(aiNode *node, const aiScene *scene){
     // 处理位于当前节点的每个网格
     for (unsigned int i = 0; i < node->mNumMeshes; i++){
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
@@ -58,7 +57,7 @@ void Model::process_node(aiNode *node, const aiScene *scene){
         process_node(node->mChildren[i], scene);
 }
 
-Mesh Model::process_mesh(aiMesh *mesh, const aiScene *scene){
+ren::Mesh ren::Model::process_mesh(aiMesh *mesh, const aiScene *scene){
     std::vector<Vertex> vertices;
     // 遍历每个网格的顶点
     for (uint i = 0; i < mesh->mNumVertices; i++){
@@ -104,7 +103,7 @@ Mesh Model::process_mesh(aiMesh *mesh, const aiScene *scene){
     return Mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::load_textures(aiMaterial *mat, aiTextureType type, TEXTYPE typeName){
+std::vector<ren::Texture> ren::Model::load_textures(aiMaterial *mat, aiTextureType type, TEXTYPE typeName){
     std::vector<Texture> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++){
         aiString str;
@@ -128,27 +127,4 @@ std::vector<Texture> Model::load_textures(aiMaterial *mat, aiTextureType type, T
         }
     }
     return textures;
-    // vector<Texture> textures;
-	// for (auto i = 0; i < mat->GetTextureCount(type); ++i){
-	// 	aiString name;
-	// 	mat->GetTexture(type, i, &name);
-	// 	auto toFind = textures_loaded.find(name.C_Str());
-	// 	if (toFind != textures_loaded.end()){
-	// 		textures.push_back(toFind->second);
-	// 	}else{
-	// 		Texture tex;
-	// 		auto filePath = StringUtil::Format("%s/%s", directory.c_str(), name.C_Str());
-
-	// 		auto aitexture = scene->GetEmbeddedTexture(name.C_Str());
-	// 		if (aitexture != nullptr)
-	// 			tex.id = Resource::LoadTextureFromAssImp(aitexture, GL_CLAMP, GL_LINEAR, GL_LINEAR);
-	// 		else
-	// 			tex.id = Resource::LoadTexture(filePath.c_str(), GL_REPEAT, GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR);
-	// 		tex.type = typeName;
-	// 		tex.Path = name;
-	// 		textures.push_back(tex);
-	// 		textures_loaded[name.C_Str()] = tex;
-	// 	}
-	// }
-	// return textures;
 }

@@ -6,7 +6,7 @@
 #include "Shader.h"
 
 // constexpr static uint MAX_BONE_INFLUENCE = 4;
-
+namespace ren{
 enum class TEXTYPE{
     TEXTURE_DIFFUSE, //漫反射纹理贴图
     TEXTURE_SPECULAR, //镜面反射纹理贴图
@@ -40,3 +40,4 @@ public:
     void draw_mesh(Shader &shader);
     Mesh(std::vector<Vertex>&, std::vector<uint>&, std::vector<Texture>&);
 };  
+}

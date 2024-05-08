@@ -1,11 +1,11 @@
 #include "Mesh.h"
-Mesh::Mesh(std::vector<Vertex> &vertexs, std::vector<uint> &indices, std::vector<Texture> &textutes){
+ren::Mesh::Mesh(std::vector<Vertex> &vertexs, std::vector<uint> &indices, std::vector<Texture> &textutes){
     this->m_indices = indices;
     this->m_textures = textutes;
     this->m_vertices = vertexs;
     this->init_mesh();
 }
-void Mesh::init_mesh(){
+void ren::Mesh::init_mesh(){
      //******************************VAO**************************
     glGenVertexArrays(1, &m_vao);
     glBindVertexArray(m_vao);
@@ -42,7 +42,7 @@ void Mesh::init_mesh(){
     glBindVertexArray(0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
-void Mesh::draw_mesh(Shader &shader){
+void ren::Mesh::draw_mesh(Shader &shader){
     // bind appropriate textures
     uint diffuseNr  = 1;
     uint specularNr = 1;

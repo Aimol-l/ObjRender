@@ -3,7 +3,7 @@
 
 
 //负责着色器的加载、编译和链接。这个类可以包含着色器程序的ID、着色器的源代码等信息。
-int Shader::create_shader(const std::string &vertex_path, const std::string &fragment_path) {
+int ren::Shader::create_shader(const std::string &vertex_path, const std::string &fragment_path) {
     // Log::info("create_shader....");
     std::string vertex_code,fragment_code;
     std::fstream v_shader_file,f_shader_file;
@@ -84,33 +84,33 @@ int Shader::create_shader(const std::string &vertex_path, const std::string &fra
     // glUseProgram(this->program_id);
     return 1;
 }
-void Shader::use(){
+void ren::Shader::use(){
      glUseProgram(this->program_id);
 }
-void Shader::set_bool(const std::string &name, bool value) const{
+void ren::Shader::set_bool(const std::string &name, bool value) const{
      glUniform1i(glGetUniformLocation(this->program_id, name.c_str()), value ? 1 : 0);
 }
 
-void Shader::set_int(const std::string &name, int value) const{
+void ren::Shader::set_int(const std::string &name, int value) const{
      glUniform1i(glGetUniformLocation(this->program_id, name.c_str()), value);
 }
 
-void Shader::set_float(const std::string &name, float value) const{
+void ren::Shader::set_float(const std::string &name, float value) const{
      glUniform1f(glGetUniformLocation(this->program_id, name.c_str()), value);
 }
 
-void Shader::set_vec4(const std::string &name, float x, float y, float z, float w) const{
+void ren::Shader::set_vec4(const std::string &name, float x, float y, float z, float w) const{
      glUniform4f(glGetUniformLocation(this->program_id,name.c_str()),x,y,z,w);
 }
 
-void Shader::set_mat2(const std::string &name, const glm::mat2 &mat) const{
+void ren::Shader::set_mat2(const std::string &name, const glm::mat2 &mat) const{
      glUniformMatrix4fv(glGetUniformLocation(this->program_id,name.c_str()),1,GL_FALSE,&mat[0][0]);
 }
 
-void Shader::set_mat3(const std::string &name, const glm::mat3 &mat) const{
+void ren::Shader::set_mat3(const std::string &name, const glm::mat3 &mat) const{
     glUniformMatrix4fv(glGetUniformLocation(this->program_id,name.c_str()),1,GL_FALSE,&mat[0][0]);
 }
 
-void Shader::set_mat4(const std::string &name, const glm::mat4 &mat) const{
+void ren::Shader::set_mat4(const std::string &name, const glm::mat4 &mat) const{
     glUniformMatrix4fv(glGetUniformLocation(this->program_id,name.c_str()),1,GL_FALSE,&mat[0][0]);
 }

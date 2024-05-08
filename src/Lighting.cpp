@@ -2,14 +2,14 @@
 #include <glm/gtc/type_ptr.hpp>
 
 //********************************************************
-Lighting::~Lighting(){
+ren::Lighting::~Lighting(){
 }
-Lighting::Lighting(int type,const std::string &model_path):m_type(type){
+ren::Lighting::Lighting(int type,const std::string &model_path):m_type(type){
     m_light_model = std::make_unique<Model>();
     m_light_model->load_model(model_path);
 }
 
-void Lighting::draw_light(Shader &shader,size_t index){
+void ren::Lighting::draw_light(Shader &shader,size_t index){
     std::string light_index = "lights[" + std::to_string(index) + "]";
     GLuint loc_type = glGetUniformLocation(shader.get_id(), (light_index + ".type").c_str());
     GLuint loc_position = glGetUniformLocation(shader.get_id(), (light_index + ".position").c_str());
@@ -51,11 +51,11 @@ void Lighting::draw_light(Shader &shader,size_t index){
     m_light_model->draw_model(shader);
 }
 
-void Lighting::init(glm::vec3 &pos, glm::vec3 &color){
+void ren::Lighting::init(glm::vec3 &pos, glm::vec3 &color){
     m_pos = pos;
     m_color = color;
 }
-void Lighting::init(glm::vec3 &pos,glm::vec3 &direction,glm::vec3 &color){
+void ren::Lighting::init(glm::vec3 &pos,glm::vec3 &direction,glm::vec3 &color){
     m_pos = pos;
     m_color = color;
     m_direction = direction;

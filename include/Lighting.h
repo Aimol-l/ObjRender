@@ -5,6 +5,8 @@
 #include "Model.h"
 #include <chrono>
 
+
+namespace ren{
 class Lighting{
 protected:
     int m_type = 0; //{0:平行光, 1:点光源, 2:聚光灯}
@@ -48,3 +50,4 @@ public:
     //点光源,聚光灯
      void init(glm::vec3&,glm::vec3&,glm::vec3&);
 };
+}

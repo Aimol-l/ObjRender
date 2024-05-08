@@ -7,11 +7,11 @@ void check_error(std::string info){
         std::cerr << "OpenGL error after"<< info << error << std::endl;
     }
 }
-Render::Render(){
-    m_camera = std::make_unique<Camera>(Camera::get_instence());
+ren::Render::Render(){
+    m_camera.reset(Camera::get_instence());
 };
-Render::~Render(){}
-void Render::add_shader(const std::string &vertex_path, const std::string &fragment_path){
+ren::Render::~Render(){}
+void ren::Render::add_shader(const std::string &vertex_path, const std::string &fragment_path){
     Log::info("add_shader....");
     Log::info("vertex_path = "+vertex_path);
     Log::info("fragment_path = "+fragment_path);
@@ -20,17 +20,17 @@ void Render::add_shader(const std::string &vertex_path, const std::string &fragm
     Log::info("add_shader....done!!");
 }
 
-void Render::add_light(std::unique_ptr<Lighting>&light){
+void ren::Render::add_light(std::unique_ptr<Lighting>&light){
     m_lights.push_back(std::move(light));
     GLuint loc_num = glGetUniformLocation(m_shader->get_id(), "num_light");
     glUniform1i(loc_num, static_cast<int>(m_lights.size()));
 }
-void Render::add_model(const std::string& model_path){
+void ren::Render::add_model(const std::string& model_path){
     Log::info("add_model....");
     m_model = std::make_unique<Model>(model_path);
     Log::info("add_model....done!!");
 }
-void Render::add_camera(glm::vec3 &pos, glm::vec3 &forward, glm::vec3 &up){
+void ren::Render::add_camera(glm::vec3 &pos, glm::vec3 &forward, glm::vec3 &up){
     Log::info("add_camera....");
     m_camera->set_position(pos);
     m_camera->set_forward(forward);
@@ -39,7 +39,7 @@ void Render::add_camera(glm::vec3 &pos, glm::vec3 &forward, glm::vec3 &up){
     Log::info("add_camera....done!!");
 }
 //绘制上所有的mesh,lamp
-void Render::draw(){
+void ren::Render::draw(){
     glm::mat4 modelMat = m_camera->get_scale() * glm::mat4(1.0f);
     glm::mat4 projectMat = glm::perspective(glm::radians(45.0f),1024.0f / 800.0f, 0.1f, 100.0f);
     glm::mat4 viewMat = m_camera->get_view_mat();
@@ -55,35 +55,35 @@ void Render::draw(){
 
 }
 
-void Render::set_shader(const std::string &name, int val) const
+void ren::Render::set_shader(const std::string &name, int val) const
 {
     glUniform1i(glGetUniformLocation(m_shader->get_id(), name.c_str()), val ? 1 : 0);
 }
 
-void Render::set_shader(const std::string &name, bool val) const{
+void ren::Render::set_shader(const std::string &name, bool val) const{
      glUniform1i(glGetUniformLocation(m_shader->get_id(), name.c_str()), val);
 }
 
-void Render::set_shader(const std::string &name, float val) const{
+void ren::Render::set_shader(const std::string &name, float val) const{
     glUniform1f(glGetUniformLocation(m_shader->get_id(), name.c_str()), val);
 }
 
-void Render::set_shader(const std::string &name, glm::vec3 &vec) const{
+void ren::Render::set_shader(const std::string &name, glm::vec3 &vec) const{
     glUniform4f(glGetUniformLocation(m_shader->get_id(),name.c_str()),vec.x,vec.y,vec.z,0);
 }
 
-void Render::set_shader(const std::string &name, glm::vec4 &vec) const{
+void ren::Render::set_shader(const std::string &name, glm::vec4 &vec) const{
     glUniform4f(glGetUniformLocation(m_shader->get_id(),name.c_str()),vec.x,vec.y,vec.z,vec.w);
 }
 
-void Render::set_shader(const std::string &name, const glm::mat2 &mat) const{
+void ren::Render::set_shader(const std::string &name, const glm::mat2 &mat) const{
     glUniformMatrix4fv(glGetUniformLocation(m_shader->get_id(),name.c_str()),1,GL_FALSE,&mat[0][0]);
 }
 
-void Render::set_shader(const std::string &name, const glm::mat3 &mat) const{
+void ren::Render::set_shader(const std::string &name, const glm::mat3 &mat) const{
     glUniformMatrix4fv(glGetUniformLocation(m_shader->get_id(),name.c_str()),1,GL_FALSE,&mat[0][0]);
 }
 
-void Render::set_shader(const std::string &name, const glm::mat4 &mat) const{
+void ren::Render::set_shader(const std::string &name, const glm::mat4 &mat) const{
     glUniformMatrix4fv(glGetUniformLocation(m_shader->get_id(),name.c_str()),1,GL_FALSE,&mat[0][0]);
 }

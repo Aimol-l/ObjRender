@@ -4,27 +4,23 @@
 
 
 
-bool Window::m_pressed = false; 
-glm::vec2 Window::LASTPOS = {0,0};
-float Window::SPEED = 0.1f;
-std::unique_ptr<Camera> Window::m_camera = std::make_unique<Camera>(Camera::get_instence());
+bool ren::Window::m_pressed = false; 
+glm::vec2 ren::Window::LASTPOS = {0,0};
+float ren::Window::SPEED = 0.1f;
+ren::Camera* ren::Window::m_camera = Camera::get_instence();
 
-
-Window::Window(){
-   
-}
-Window::~Window(){
+ren::Window::~Window(){
     glfwTerminate();
 }
-int Window::close(){
-    if(m_window) return glfwWindowShouldClose(m_window.get());
-    return false;
+
+bool ren::Window::close(){
+    return glfwWindowShouldClose(m_window);
 }
-void Window::update() const{
-    if(m_window) glfwSwapBuffers(m_window.get());
+void ren::Window::update(){
+    glfwSwapBuffers(m_window);
     glfwPollEvents();
 }
-bool Window::create_window(uint w, uint h, const char *title, bool is_full){
+bool ren::Window::create_window(uint w, uint h, const char *title, bool is_full){
     // 初始化GLFW
     if (!glfwInit()) {
         const char *errmsg = nullptr;
@@ -42,21 +38,21 @@ bool Window::create_window(uint w, uint h, const char *title, bool is_full){
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6); //opengl的小版本是6
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //选择核心模式，而不是兼容模式
     if (is_full){
-		m_window = std::make_unique<GLFWwindow>(glfwCreateWindow(m_size.at(0), m_size.at(1), title, glfwGetPrimaryMonitor(), nullptr));
+        m_window = glfwCreateWindow(m_size.at(0), m_size.at(1), title, glfwGetPrimaryMonitor(), nullptr);
     }else{
-		m_window = std::make_unique<GLFWwindow>(glfwCreateWindow(m_size.at(0), m_size.at(1), title, nullptr, nullptr));
+        m_window = glfwCreateWindow(m_size.at(0), m_size.at(1), title, nullptr, nullptr);
     }
     if (!m_window) {
         glfwTerminate();
         Log::error("Create window failed!");
         return false;
     }
-    glfwMakeContextCurrent(m_window.get());
+    glfwMakeContextCurrent(m_window);
     // glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     // 设置回调函数
-    glfwSetKeyCallback(m_window.get(),this->key_callback);
-    glfwSetCursorPosCallback(m_window.get(), this->mouse_moveBack);
-    glfwSetMouseButtonCallback(m_window.get(), this->mouse_clickBack);
+    glfwSetKeyCallback(m_window,this->key_callback);
+    glfwSetCursorPosCallback(m_window, this->mouse_moveBack);
+    glfwSetMouseButtonCallback(m_window, this->mouse_clickBack);
     // Load glXXX function pointers (only after this you may use OpenGL functions)
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         glfwTerminate();
@@ -67,14 +63,12 @@ bool Window::create_window(uint w, uint h, const char *title, bool is_full){
     std::string version = (const char *)glGetString(GL_VERSION);
     Log::info( "OpenGL version: " + version);
 
-    glfwSetWindowAttrib(m_window.get(), GLFW_RESIZABLE, GLFW_FALSE);//控制是否缩放
+    glfwSetWindowAttrib(m_window, GLFW_RESIZABLE, GLFW_FALSE);//控制是否缩放
 	glViewport(0, 0, static_cast<GLsizei>(m_size.at(0)), static_cast<GLsizei>(m_size.at(1)));
     return true;
 }
 
-
-
-void Window::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods){
+void ren::Window::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods){
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
@@ -110,14 +104,14 @@ void Window::key_callback(GLFWwindow *window, int key, int scancode, int action,
         std::cout << "Down key pressed or repeated" << std::endl;
     }
 }
-void Window::mouse_moveBack(GLFWwindow *window, double xpos, double ypos){
+void ren::Window::mouse_moveBack(GLFWwindow *window, double xpos, double ypos){
     if(m_pressed){
         glm::vec2 dPos = glm::vec2{xpos,ypos} - LASTPOS;
         LASTPOS = glm::vec2{xpos,ypos};
         m_camera->rotate(dPos.y*0.2f,dPos.x*0.2f,0);
     }
 }
-void Window::mouse_clickBack(GLFWwindow *window, int button, int action, int mods){
+void ren::Window::mouse_clickBack(GLFWwindow *window, int button, int action, int mods){
     Log::info("mouse_clickBack");
     // 鼠标点击处理逻辑
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) { //左键按压
@@ -130,6 +124,6 @@ void Window::mouse_clickBack(GLFWwindow *window, int button, int action, int mod
        m_pressed = false;
     }
 }
-void Window::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){\
+void ren::Window::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){\
     m_camera->set_scale(xoffset,yoffset);
 }

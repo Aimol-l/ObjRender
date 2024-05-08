@@ -11,7 +11,7 @@
 #include <assimp/postprocess.h>
 #include <iostream>
 #include "stb_image.h"
-
+namespace ren{
 class Model {
 public:
     Model(){};
@@ -28,3 +28,4 @@ private:
     uint load_images(const std::string &path, const std::string &directory, bool gamma);
     std::vector<Texture> load_textures(aiMaterial *mat, aiTextureType type, TEXTYPE typeName);
 };
+}

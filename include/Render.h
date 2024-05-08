@@ -5,11 +5,12 @@
 #include "Shader.h"
 #include "Model.h"
 #include "Lighting.h"
+namespace ren{
 class Render{
 private:
-    std::unique_ptr<Model> m_model = nullptr;
-    std::unique_ptr<Camera> m_camera = nullptr;
-    std::unique_ptr<Shader> m_shader = nullptr;
+    std::unique_ptr<Model> m_model;
+    std::unique_ptr<Camera> m_camera;
+    std::unique_ptr<Shader> m_shader;
     std::vector<std::unique_ptr<Lighting>> m_lights;
 public:
     Render();
@@ -31,3 +32,4 @@ public:
     void add_shader(const std::string &vertex_path,const std::string &fragment_path);
 
 };
+}

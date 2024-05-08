@@ -4,6 +4,9 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "Log.h"
 #include <iostream>
+
+namespace ren{
+
 class Camera{
 private:
     glm::vec3 m_up; //上方向
@@ -33,3 +36,4 @@ public:
     void set_rotation(float pitch,float yaw,float roll);
 };
    
+}

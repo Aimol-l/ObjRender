@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 #include "glm/glm.hpp"
 
+namespace ren{
 class Shader {
 private:
     unsigned int program_id;
@@ -24,3 +25,4 @@ public:
     void set_mat4(const std::string &name, const glm::mat4 &mat) const;
 };
 
+}
