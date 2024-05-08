@@ -13,7 +13,7 @@ private:
     glm::vec3 m_position; //相机位置
     glm::vec3 m_rotation;
     glm::vec3 m_forward; //相机看的方向
-    glm::vec3 m_scale;
+    glm::vec3 m_scale = {1.0f,1.0f,1.0f};
     Camera() = default; 
 public:
     ~Camera(){};

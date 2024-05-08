@@ -29,9 +29,9 @@ int main(int argc, char const *argv[]){
     rend->add_model(model_path);
     rend->add_camera(pos,forward,up);
     // 添加一个平行光
-    // const std::string light_model = "../assets/obj/123456.obj";
-    // auto light = std::make_unique<ren::Lighting>(1,light_model);
-    // rend->add_light(light);
+    const std::string light_model = "../assets/obj/123456.obj";
+    auto light = std::make_unique<ren::Lighting>(1,light_model);
+    rend->add_light(light);
     //*******************************************************************************
     auto &app = ren::Application::get_app();
     app.set_window(win);
