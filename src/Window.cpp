@@ -8,17 +8,76 @@ glm::vec2 ren::Window::LASTPOS = {0,0};
 float ren::Window::SPEED = 0.1f;
 ren::Camera* ren::Window::m_camera = Camera::get_instence();
 
+ren::Window::Window(){
+
+}
+
 ren::Window::~Window(){
+    // 清理imgui
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+    
+    glfwDestroyWindow(m_window);
     glfwTerminate();
+
 }
 
 bool ren::Window::close(){
     return glfwWindowShouldClose(m_window);
 }
 void ren::Window::update(){
-    glfwSwapBuffers(m_window);
     glfwPollEvents();
+    this->render_imgui(); // 更新
+    glfwSwapBuffers(m_window);
 }
+
+void ren::Window::init_imgui(){
+    // 设置imgui上下文
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    m_io = &ImGui::GetIO(); (void)m_io;
+    m_io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    m_io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+    // 设置主题颜色风格
+    // ImGui::StyleColorsDark();
+    ImGui::StyleColorsLight();
+    ImGui_ImplGlfw_InitForOpenGL(m_window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+}
+void ren::Window::render_imgui(){
+    // Start the Dear ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    ImGui::SetNextWindowPos({0, 0});
+    ImGui::SetNextWindowSize({m_size[0] / 4, m_size[1]}); 
+    //*******************************************要的渲染各种组件****************************************
+    static float f = 0.0f;
+    static int counter = 0;
+    bool show_demo_window = true;
+    bool show_another_window = false;
+    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+    ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+    ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+    ImGui::Checkbox("Another Window", &show_another_window);
+    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+    ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+    if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+        counter++;
+    ImGui::SameLine();
+    ImGui::Text("counter = %d", counter);
+    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / m_io->Framerate, m_io->Framerate);
+    ImGui::End();
+    //*************************************************************************************
+    ImGui::End();
+    //***********************************************************************************
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}   
+
 bool ren::Window::create_window(uint w, uint h, const char *title, bool is_full){
     // 初始化GLFW
     if (!glfwInit()) {
@@ -65,8 +124,11 @@ bool ren::Window::create_window(uint w, uint h, const char *title, bool is_full)
 
     glfwSetWindowAttrib(m_window, GLFW_RESIZABLE, GLFW_FALSE);//控制是否缩放
 	glViewport(0, 0, static_cast<GLsizei>(m_size.at(0)), static_cast<GLsizei>(m_size.at(1)));
+    //************************
+    this->init_imgui();
     return true;
 }
+
 
 void ren::Window::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods){
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -104,6 +166,7 @@ void ren::Window::key_callback(GLFWwindow *window, int key, int scancode, int ac
         std::cout << "Down key pressed or repeated" << std::endl;
     }
 }
+
 void ren::Window::mouse_moveBack(GLFWwindow *window, double xpos, double ypos){
     if(m_pressed){
         glm::vec2 dPos = glm::vec2{xpos,ypos} - LASTPOS;
@@ -126,5 +189,6 @@ void ren::Window::mouse_clickBack(GLFWwindow *window, int button, int action, in
 }
 void ren::Window::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
     std::cout<<std::format(" {} ,{}",xoffset,yoffset)<<std::endl;
-    glob_model_scale +=  glm::vec3{yoffset * 0.05,yoffset * 0.05,yoffset * 0.05};
+    // glob_model_scale +=  glm::vec3{yoffset * 0.05,yoffset * 0.05,yoffset * 0.05};
+    m_camera->translate(0,0,yoffset * 0.5f);
 }
