@@ -1,13 +1,24 @@
 #include "Model.h"
-
-
+#include "Camera.h"
+#include "globals.h"
 void ren::Model::draw_model(Shader &shader){
+    // auto scale = ren::Camera::get_instence()->get_scale();
+    // glm::mat4 model_mat = glm::mat4(1.0f);
+    // model_mat = glm::translate(model_mat, m_pos);
+    // shader.set_mat4("modelMat",model_mat);
+    // m_scale = glob_model_scale;
     for(auto&mesh:m_meshes) mesh.draw_mesh(shader);
+}
+
+glm::mat4 ren::Model::get_mat(){
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, m_pos);// 设置模型的位置
+    model = glm::scale(model, glob_model_scale);// 设置模型的缩放
+    return std::move(model);
 }
 
 void ren::Model::load_model(const std::string &path){
     Assimp::Importer import;
-    // const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);    
     const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;

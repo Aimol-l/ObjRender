@@ -41,9 +41,8 @@ void ren::Lighting::draw_light(Shader &shader,size_t index){
     //******************************设置光源位置**************************************
     auto now =  std::chrono::system_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(now - create_time) / 1000000.0f;
-    glm::vec3 new_pos = {5*glm::cos(duration.count()),5*glm::sin(duration.count()),0};
+    glm::vec3 new_pos = {5*glm::cos(duration.count()),0,5*glm::sin(duration.count())};
     this->set_pos(new_pos);
-    // this->set_direction();
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, m_pos);// 设置模型的位置
     model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));// 设置模型的缩放

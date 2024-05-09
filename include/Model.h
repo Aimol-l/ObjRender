@@ -15,10 +15,19 @@ namespace ren{
 class Model {
 public:
     Model(){};
-    Model(const std::string &path) {load_model(path);} 
+    Model(const std::string &path) {
+        load_model(path);
+    }
+    Model(const std::string &path,const glm::vec3 model_pos) {
+        load_model(path);
+        m_pos = model_pos;
+    } 
     void load_model(const std::string &path);
     void draw_model(Shader &shader); 
+    glm::mat4 get_mat();
 private:
+    glm::vec3 m_pos = {0.0f,0.0f,0.0f};
+    // glm::vec3 m_scale = {1.0f,1.0f,1.0f};
     std::string m_directory;
     std::vector<Mesh> m_meshes;
     std::vector<Texture> m_textures_loaded;

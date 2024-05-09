@@ -27,9 +27,17 @@ void ren::Render::add_light(std::unique_ptr<Lighting>&light){
 }
 void ren::Render::add_model(const std::string& model_path){
     Log::info("add_model....");
-    m_model = std::make_unique<Model>(model_path);
+    m_models.push_back(std::move(std::make_unique<Model>(model_path)));
+    // m_model = std::make_unique<Model>(model_path);
     Log::info("add_model....done!!");
 }
+void ren::Render::add_model(const std::string& model_path,const glm::vec3& model_pos){
+    Log::info("add_model....");
+    m_models.push_back(std::move(std::make_unique<Model>(model_path,model_pos)));
+    // m_model = std::make_unique<Model>(model_path,model_mat);
+    Log::info("add_model....done!!");
+}
+
 void ren::Render::add_camera(glm::vec3 &pos, glm::vec3 &forward, glm::vec3 &up){
     Log::info("add_camera....");
     m_camera->set_position(pos);
@@ -40,23 +48,24 @@ void ren::Render::add_camera(glm::vec3 &pos, glm::vec3 &forward, glm::vec3 &up){
 }
 //绘制上所有的mesh,lamp
 void ren::Render::draw(){
-    glm::mat4 modelMat = m_camera->get_scale() * glm::mat4(1.0f);
     glm::mat4 projectMat = glm::perspective(glm::radians(45.0f),1024.0f / 800.0f, 0.1f, 100.0f);
     glm::mat4 viewMat = m_camera->get_view_mat();
-    auto camera_pos = m_camera->get_position();
-    //给shader设置MVP矩阵
-    this->set_shader("modelMat",modelMat);
-    this->set_shader("projectMat",projectMat);
+    glm::vec3 camera_pos = m_camera->get_position();
+    
     this->set_shader("viewMat",viewMat);
+    this->set_shader("projectMat",projectMat);
     this->set_shader("camera_pos",camera_pos);
-    m_model->draw_model(*m_shader);
-    for(size_t index;index<m_lights.size();++index) 
-        m_lights[index]->draw_light(*m_shader,index);
 
+    for(size_t index = 0;index < m_models.size();++index){
+        this->set_shader("modelMat",m_models[index]->get_mat());
+        m_models[index]->draw_model(*m_shader);
+    }
+    for(size_t index = 0;index<m_lights.size();++index){
+        m_lights[index]->draw_light(*m_shader,index);
+    }
 }
 
-void ren::Render::set_shader(const std::string &name, int val) const
-{
+void ren::Render::set_shader(const std::string &name, int val) const{
     glUniform1i(glGetUniformLocation(m_shader->get_id(), name.c_str()), val ? 1 : 0);
 }
 

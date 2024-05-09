@@ -1,7 +1,6 @@
 #include "Window.h"
 #include "Log.h"
-
-
+#include "globals.h"
 
 
 bool ren::Window::m_pressed = false; 
@@ -53,6 +52,7 @@ bool ren::Window::create_window(uint w, uint h, const char *title, bool is_full)
     glfwSetKeyCallback(m_window,this->key_callback);
     glfwSetCursorPosCallback(m_window, this->mouse_moveBack);
     glfwSetMouseButtonCallback(m_window, this->mouse_clickBack);
+    glfwSetScrollCallback(m_window, this->scroll_callback); 
     // Load glXXX function pointers (only after this you may use OpenGL functions)
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         glfwTerminate();
@@ -124,6 +124,7 @@ void ren::Window::mouse_clickBack(GLFWwindow *window, int button, int action, in
        m_pressed = false;
     }
 }
-void ren::Window::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){\
-    m_camera->set_scale(xoffset,yoffset);
+void ren::Window::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
+    std::cout<<std::format(" {} ,{}",xoffset,yoffset)<<std::endl;
+    glob_model_scale +=  glm::vec3{yoffset * 0.05,yoffset * 0.05,yoffset * 0.05};
 }

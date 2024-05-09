@@ -25,23 +25,22 @@ glm::mat4x4 ren::Camera::get_view_mat(){
 glm::vec3 ren::Camera::get_position(){
     return m_position;
 }
-glm::mat4 ren::Camera::get_scale(){
-    glm::mat4 ret;
-	ret = glm::transpose(glm::mat4(
-        m_scale.x, 0, 0, 0,
-        0, m_scale.y, 0, 0,
-        0, 0, m_scale.z, 0,
-        0, 0, 0, 1
-    ));
-	return ret;
-}
-void ren::Camera::set_scale(double xoffset, double yoffset){
-    m_scale.x += yoffset * 0.01;
-    m_scale.y += yoffset * 0.01; 
-    m_scale.z = 1;
-}
-void ren::Camera::set_up(glm::vec3 pos)
-{
+// glm::mat4 ren::Camera::get_scale(){
+//     glm::mat4 ret;
+// 	ret = glm::transpose(glm::mat4(
+//         m_scale.x, 0, 0, 0,
+//         0, m_scale.y, 0, 0,
+//         0, 0, m_scale.z, 0,
+//         0, 0, 0, 1
+//     ));
+// 	return ret;
+// }
+// void ren::Camera::set_scale(double xoffset, double yoffset){
+//     m_scale.x += yoffset * 0.05;
+//     m_scale.y += yoffset * 0.05; 
+//     m_scale.z = 1;
+// }
+void ren::Camera::set_up(glm::vec3 pos){
     this->m_up = pos;
 }
 void ren::Camera::set_position(glm::vec3 pos){
