@@ -23,26 +23,29 @@ ren::Window::~Window(){
 
 }
 
+
 bool ren::Window::close(){
     return glfwWindowShouldClose(m_window);
 }
 void ren::Window::update(){
-    glfwPollEvents();
+    
     this->render_imgui(); // 更新
+    glfwPollEvents();
     glfwSwapBuffers(m_window);
 }
 
 void ren::Window::init_imgui(){
     // 设置imgui上下文
-    IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    m_io = &ImGui::GetIO(); (void)m_io;
-    m_io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    m_io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
+    auto io = &ImGui::GetIO(); (void)io;
+    io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    
+    // io->WantCaptureMouse = true;
+    // io->WantCaptureKeyboard = true;
     // 设置主题颜色风格
-    // ImGui::StyleColorsDark();
-    ImGui::StyleColorsLight();
+    ImGui::StyleColorsDark();
+    // ImGui::StyleColorsLight();
     ImGui_ImplGlfw_InitForOpenGL(m_window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 }
@@ -52,7 +55,7 @@ void ren::Window::render_imgui(){
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
     ImGui::SetNextWindowPos({0, 0});
-    ImGui::SetNextWindowSize({m_size[0] / 4, m_size[1]}); 
+    ImGui::SetNextWindowSize({static_cast<float>(m_size[0] / 4), static_cast<float>(m_size[1])}); 
     //*******************************************要的渲染各种组件****************************************
     static float f = 0.0f;
     static int counter = 0;
@@ -69,9 +72,7 @@ void ren::Window::render_imgui(){
         counter++;
     ImGui::SameLine();
     ImGui::Text("counter = %d", counter);
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / m_io->Framerate, m_io->Framerate);
-    ImGui::End();
-    //*************************************************************************************
+    ImGui::Text("(%.1f FPS)", ImGui::GetIO().Framerate);
     ImGui::End();
     //***********************************************************************************
     ImGui::Render();
@@ -105,17 +106,23 @@ bool ren::Window::create_window(uint w, uint h, const char *title, bool is_full)
         Log::error("Create window failed!");
         return false;
     }
+
     glfwMakeContextCurrent(m_window);
-    // glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSwapInterval(1);
+    
+
+    //************************
     // 设置回调函数
     glfwSetKeyCallback(m_window,this->key_callback);
     glfwSetCursorPosCallback(m_window, this->mouse_moveBack);
     glfwSetMouseButtonCallback(m_window, this->mouse_clickBack);
     glfwSetScrollCallback(m_window, this->scroll_callback); 
+
+    glfwSetInputMode(m_window, GLFW_STICKY_KEYS, GLFW_TRUE);
+
     // Load glXXX function pointers (only after this you may use OpenGL functions)
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         glfwTerminate();
-        // std::cerr << "GLAD failed to load GL functions\n";
         Log::error("GLAD failed to load GL functions!!");
         return false;
     }
@@ -129,8 +136,8 @@ bool ren::Window::create_window(uint w, uint h, const char *title, bool is_full)
     return true;
 }
 
-
 void ren::Window::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods){
+    // ImGui_ImplGlfw_KeyCallback(window,key,scancode,action,mods);
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
@@ -166,12 +173,12 @@ void ren::Window::key_callback(GLFWwindow *window, int key, int scancode, int ac
         std::cout << "Down key pressed or repeated" << std::endl;
     }
 }
-
 void ren::Window::mouse_moveBack(GLFWwindow *window, double xpos, double ypos){
+    
     if(m_pressed){
         glm::vec2 dPos = glm::vec2{xpos,ypos} - LASTPOS;
         LASTPOS = glm::vec2{xpos,ypos};
-        m_camera->rotate(dPos.y*0.2f,dPos.x*0.2f,0);
+        m_camera->rotate(dPos.y*0.1f,dPos.x*0.1f,0);
     }
 }
 void ren::Window::mouse_clickBack(GLFWwindow *window, int button, int action, int mods){
@@ -188,7 +195,5 @@ void ren::Window::mouse_clickBack(GLFWwindow *window, int button, int action, in
     }
 }
 void ren::Window::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
-    std::cout<<std::format(" {} ,{}",xoffset,yoffset)<<std::endl;
-    // glob_model_scale +=  glm::vec3{yoffset * 0.05,yoffset * 0.05,yoffset * 0.05};
     m_camera->translate(0,0,yoffset * 0.5f);
 }

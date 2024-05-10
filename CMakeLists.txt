@@ -26,7 +26,6 @@ file(GLOB SRC_FILES
 
 add_subdirectory(3rdpart)
 
-
 include_directories(${PROJECT_DIR}/include)
 
 add_executable(${THIS_PROJECT_NAME}  ${SRC_FILES})
@@ -42,4 +41,4 @@ target_include_directories(glad INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/3rdpart/gl
 target_include_directories(glfw INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/3rdpart/glfw/include)
 target_include_directories(spdlog INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/3rdpart/spdlog/include)
 target_include_directories(glm INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/3rdpart/glm)
-target_include_directories(imgui INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/3rdpart/imgui)
+target_include_directories(imgui INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/3rdpart/imgui/include)

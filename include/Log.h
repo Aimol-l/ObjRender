@@ -21,7 +21,8 @@ private:
     // 私有构造函数，确保不能创建实例
     Log(){
         // 设置日志级别
-        spdlog::set_level(spdlog::level::debug);
+        spdlog::flush_on(spdlog::level::trace);
+        // spdlog::set_level(spdlog::level::trace);
         // 尝试创建文件日志器
         try {
             if (std::filesystem::exists("logs/app.log"))  std::filesystem::remove("logs/app.log");
