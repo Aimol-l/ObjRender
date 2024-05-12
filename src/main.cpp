@@ -24,8 +24,8 @@ int main(int argc, char const *argv[]){
     const std::string model_path = "../assets/obj/moon.obj";
 
     rend->add_shader(vertex_path,fragment_path);
-    rend->add_model(model_path,{0,-2,0});
-    rend->add_model(model_path,{0,2,0});
+    rend->add_model(model_path,{0,0,0});
+    // rend->add_model(model_path,{0,2,0});
     rend->add_camera(pos,forward,up);
     
     // 添加点光源

@@ -20,24 +20,26 @@ struct Lighting {
 };      
 
 #define MAX_LIGHTS 20
+// layout (location = 0 ) uniform vec3 = xxxx;
 uniform Lighting lights[MAX_LIGHTS];
 uniform int num_light;
 uniform vec3 camera_pos;
 uniform sampler2D texture_diffuse1;
 
 vec3 ParallelLighting(Lighting light, vec3 normal, vec3 camera_direction) {
-    // 衰减系数
-    float distance = length(light.position - FragPos);
-    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
+    // 衰减系数,平行光不衰减
+    //float distance = length(light.position - FragPos);
+    //float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
     // 环境光
-    vec3 ambient_ = light.ambient * light.color;
+    vec3 ambient_ = light.ambient * light.color * texture(texture_diffuse1, TexCoords).rgb;;
     //漫反射
-    vec3 diffuse_ = max(dot(normal, normalize(light.direction)), 0.0) * light.color * light.diffuse;
+    vec3 light_direct = normalize(light.direction);
+    vec3 diffuse_ = max(dot(normal, light_direct), 0.0) * light.color * light.diffuse * texture(texture_diffuse1, TexCoords).rgb;
     // 镜面反射
     vec3 reflect_direct = reflect(normalize(light.direction), normal);  // 输入法线方向，光线方向，输出反射方向
-    float spec = pow(max(dot(camera_direction, reflect_direct), 0.0), 32);
-    vec3 specular_ = light.specular * spec * light.color;
-    return attenuation*(ambient_ + diffuse_ + specular_);
+    float spec = pow(max(dot(camera_direction, reflect_direct), 0.0), 24);
+    vec3 specular_ = light.specular * spec * light.color * texture(texture_diffuse1, TexCoords).rgb;
+    return (ambient_ + diffuse_ + specular_);
 }
 vec3 PointLighting(Lighting light, vec3 normal, vec3 camera_direction) {
     // 衰减系数
@@ -50,20 +52,22 @@ vec3 PointLighting(Lighting light, vec3 normal, vec3 camera_direction) {
     vec3 diffuse_ = max(dot(normal, light_direct), 0.0) * light.color * light.diffuse * texture(texture_diffuse1, TexCoords).rgb;
     // 镜面反射
     vec3 reflect_direct = reflect(light_direct, normal);  // 输入法线方向，光线方向，输出反射方向
-    float spec = pow(max(dot(camera_direction, reflect_direct), 0.0), 24);
+    float spec = pow(max(dot(camera_direction, reflect_direct), 0.0), 32);
     vec3 specular_ = light.specular * spec * light.color * texture(texture_diffuse1, TexCoords).rgb;
     //**********
     return (ambient_ + attenuation*diffuse_ + attenuation*specular_);
 }
 // vec3 SpotLighting(Lighting light, vec3 normal, vec3 fragPos, vec3 camera_direction) {
+
+
 // }
 vec3 CalculateLighting(Lighting light, vec3 normal, vec3 camera_direction) {
-    // if (light.type == 0) {
-    //    return ParallelLighting(light, normal, camera_direction);
-    // }
-    // if (light.type == 1) {
+    if (light.type == 0) {
+       return ParallelLighting(light, normal, camera_direction);
+    }
+    if (light.type == 1) {
        return PointLighting(light, normal, camera_direction);
-    // }
+    }
 }
 void main() {
     vec3 norm = normalize(Normal); // 片段单位法向量

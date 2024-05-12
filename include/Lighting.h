@@ -11,7 +11,7 @@ class Lighting{
 protected:
     int m_type = 0; //{0:平行光, 1:点光源, 2:聚光灯}
     glm::vec3 m_pos = {0.0f,3.0f,0.0f}; //光源位置
-    glm::vec3 m_direction = {0.0f,0.0f,0.0f};//光源方向
+    glm::vec3 m_direction = {0.0f,10.0f,0.0f};//光源方向
     glm::vec3 m_color = {1.0f,1.0f,1.0f}; //光源颜色
 
     glm::vec3 m_ambient =    {0.4f, 0.4f, 0.4f};  //环境光强系数
