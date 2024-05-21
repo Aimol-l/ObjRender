@@ -24,7 +24,8 @@ public:
     }
     glm::mat4x4 get_view_mat();
     glm::vec3 get_position();
-
+    glm::vec3 get_direction();
+    
     void set_up(glm::vec3 pos);
     void set_position(glm::vec3 pos);
     void set_forward(glm::vec3 pos);

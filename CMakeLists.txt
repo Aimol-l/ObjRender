@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
    
 set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_CXX_STANDARD 20) # 设置为C++ 20标准
+set(CMAKE_CXX_STANDARD 23) # 设置为C++ 20标准
 set(CMAKE_CXX_STANDARD_REQUIRED ON) #强制C++20
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(THIS_PROJECT_NAME "main")

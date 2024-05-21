@@ -30,7 +30,7 @@ int main(int argc, char const *argv[]){
     
     // 添加点光源
     const std::string light_model = "../assets/obj/123456.obj";
-    auto light = std::make_unique<ren::Lighting>(1,light_model);
+    auto light = std::make_unique<ren::Lighting>(2,light_model);
     rend->add_light(light);
     //*******************************************************************************
     auto &app = ren::Application::get_app();

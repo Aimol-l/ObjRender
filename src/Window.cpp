@@ -28,7 +28,6 @@ bool ren::Window::close(){
     return glfwWindowShouldClose(m_window);
 }
 void ren::Window::update(){
-    
     this->render_imgui(); // 更新
     glfwPollEvents();
     glfwSwapBuffers(m_window);

@@ -10,6 +10,32 @@ ren::Lighting::Lighting(int type,const std::string &model_path):m_type(type){
 }
 
 void ren::Lighting::draw_light(Shader &shader,size_t index){
+    //******************************设置光源位置，信息**************************************
+    auto now =  std::chrono::system_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(now - create_time) / 1000000.0f;
+    glm::vec3 new_pos = {10*glm::cos(duration.count()),0,10*glm::sin(duration.count())};
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, m_pos);// 设置模型的位置
+    model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));// 设置模型的缩放
+    shader.set_mat4("modelMat",model);
+    if(m_type == 0){
+        this->set_direction(new_pos); // 平行光
+        m_light_model->draw_model(shader);
+    }
+    if(m_type == 1 ) {
+        this->set_pos(new_pos); //点光源
+        m_light_model->draw_model(shader);
+    }
+    if (m_type == 2){
+        //聚光灯,设置位置和方向
+        auto dire = ren::Camera::get_instence()->get_direction();
+        auto pos = ren::Camera::get_instence()->get_position();
+        this->set_direction(dire);
+        this->set_pos(pos);
+        // std::cout<<std::format("dire=[{},{},{}]",dire.x,dire.y,dire.z)<<std::endl;
+        // std::cout<<std::format("pos=[{},{},{}]",pos.x,pos.y,pos.z)<<std::endl;
+    }
+    //**************************************传递光源信息*******************************************
     std::string light_index = "lights[" + std::to_string(index) + "]";
     GLuint loc_type = glGetUniformLocation(shader.get_id(), (light_index + ".type").c_str());
     GLuint loc_position = glGetUniformLocation(shader.get_id(), (light_index + ".position").c_str());
@@ -38,21 +64,6 @@ void ren::Lighting::draw_light(Shader &shader,size_t index){
     glUniform1f(loc_quadratic, m_quadratic);
     glUniform1f(loc_cut_off, m_cut_off);
     glUniform1f(loc_outer_cut_off, m_outer_cut_off);
-    //******************************设置光源位置**************************************
-    auto now =  std::chrono::system_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(now - create_time) / 1000000.0f;
-    glm::vec3 new_pos = {10*glm::cos(duration.count()),0,10*glm::sin(duration.count())};
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, m_pos);// 设置模型的位置
-    model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));// 设置模型的缩放
-    shader.set_mat4("modelMat",model);
-    if(m_type == 0){
-        this->set_direction(new_pos); // 平行光
-    }
-    if(m_type == 1) {
-        this->set_pos(new_pos); //点光源
-        m_light_model->draw_model(shader);
-    }
 }
 
 void ren::Lighting::init(glm::vec3 &pos, glm::vec3 &color){

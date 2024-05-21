@@ -4,7 +4,7 @@
 #include "Shader.h"
 #include "Model.h"
 #include <chrono>
-
+#include "Camera.h"
 
 namespace ren{
 class Lighting{
@@ -21,8 +21,9 @@ protected:
     float m_constant = 1.0f;    //常数
     float m_linear = 0.1f;     //一次项衰减系数
     float m_quadratic = 0.05f; //二次项衰减系数
-    float m_cut_off = 12.5f;    //聚光登范围1
-    float m_outer_cut_off = 15.0f; //聚光灯范围2
+
+    float m_cut_off = glm::pi<float>()/18.0f;    //聚光登范围1,弧度单位
+    float m_outer_cut_off = glm::pi<float>()/12.0f; //聚光灯范围2,弧度单位
 
     std::chrono::system_clock::time_point create_time = std::chrono::system_clock::now();;
     std::unique_ptr<Model> m_light_model;
@@ -38,8 +39,8 @@ public:
      void set_constant(float constant){ m_constant = constant;}
      void set_linear(float linear){ m_linear = linear;}
      void set_quadratic(float quadratic){ m_quadratic = quadratic;}
-     void set_cut_off(float cut_off){ m_cut_off = cut_off;}
-     void set_outer_cut_off(float outer_cut_off){ m_outer_cut_off = outer_cut_off;}
+     void set_cut_off(float cut_off){ m_cut_off = cut_off*glm::pi<float>()/180.0f;}
+     void set_outer_cut_off(float outer_cut_off){ m_outer_cut_off = outer_cut_off*glm::pi<float>()/180.0f;}
 public:
     ~Lighting();
     //{0:平行光, 1:点光源, 2:聚光灯}
